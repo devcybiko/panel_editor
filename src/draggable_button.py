@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from textual.widgets import Button
-from draggable_widget import DraggableWidget
-from properties_widget import PropertiesWidget
+from mixins.draggable_widget import DraggableWidget
+from mixins.properties_widget import PropertiesWidget
 import os
 
 
@@ -39,7 +39,7 @@ class DraggableButton(DraggableWidget, PropertiesWidget, Button):
                 if w.props.name and hasattr(w.props, 'value') and w.props.name[0] != '_':
                     name = w.props.name
                     value = w.props.value
-                    if w.parent.name != "Main Container":
+                    if w.parent != self.app.panel.container:
                         name = f"{w.parent.props.name}_{name}"
                     f.write(f'export {name}="{self._escape_value(value)}"\n')
             f.write(f'{self.props.command}\n')

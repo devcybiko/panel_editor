@@ -1,12 +1,12 @@
 from dataclasses import dataclass
 from textual.widgets import Input
-from draggable_widget import DraggableWidget
-from properties_widget import PropertiesWidget
+from mixins.draggable_widget import DraggableWidget
+from mixins.properties_widget import PropertiesWidget
 
 @dataclass
 class InputProperties:
     type: str = "Input"
-    name: str = "_"
+    name: str = "text_input"
     value: str = ""
     row: int = 0
     col: int = 0

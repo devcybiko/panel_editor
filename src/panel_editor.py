@@ -11,7 +11,7 @@ from draggable_input import DraggableInput, InputProperties
 from new_item_modal import NewItemModal
 from draggable_datatable import DraggableDataTable, DataTableProperties
 from draggable_textarea import DraggableTextArea, TextAreaProperties
-from draggable_widget import DraggableWidget
+from mixins.draggable_widget import DraggableWidget
 from draggable_label import DraggableLabel, LabelProperties
 from draggable_tree import DraggableTree, TreeProperties
 
@@ -36,6 +36,12 @@ class PanelEditor(App):
         self.app.panel = self
         self.app.panel.selected_widget = None
         self.action_load_panel()
+        self.set_interval(1.0, self.heartbeat)  # Calls heartbeat every 1 second
+
+    def heartbeat(self) -> None:
+        # Update widgets here
+        for widget in self.container.children:
+            widget.update()
 
     def action_show_new_item_modal(self) -> None:
         def handle_selection(selection):
@@ -141,6 +147,11 @@ class PanelEditor(App):
                     if child.props.name == f"{widget.props.name}.{name}":
                         return child
         return None
+
+    def heartbeat(self) -> None:
+        # Update widgets here
+        for widget in self.container.children:
+            widget.update()
 
     def action_remove_all_widgets(self) -> None:
         for widget in self.container.query("*"):

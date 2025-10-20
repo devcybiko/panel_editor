@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from textual.widgets import Label
-from draggable_widget import DraggableWidget
-from properties_widget import PropertiesWidget
+from mixins.draggable_widget import DraggableWidget
+from mixins.properties_widget import PropertiesWidget
 import os
 
 
