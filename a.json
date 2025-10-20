@@ -1,0 +1,178 @@
+{
+  "type": "Container",
+  "name": "Main Container",
+  "label": "New Container",
+  "row": 0,
+  "col": 0,
+  "width": 100,
+  "height": 100,
+  "children": [
+    {
+      "type": "Button",
+      "name": "ALERT",
+      "label": "ALERT",
+      "command": "./alert.sh \"$address_first_name\"",
+      "target": "_output",
+      "row": 13,
+      "col": 81,
+      "width": 20,
+      "height": 3
+    },
+    {
+      "type": "Tree",
+      "name": "_tree",
+      "label": "Root",
+      "value": "",
+      "row": 7,
+      "col": 41,
+      "width": 50,
+      "height": 18,
+      "placeholder": "placeholder"
+    },
+    {
+      "type": "DataTable",
+      "name": "_datatable",
+      "value": "",
+      "row": 33,
+      "col": 12,
+      "width": 68,
+      "height": 12,
+      "placeholder": "placeholder"
+    },
+    {
+      "type": "Button",
+      "name": "_",
+      "label": "Sample Data",
+      "command": "cat people-100.csv",
+      "target": "_datatable",
+      "row": 16,
+      "col": 12,
+      "width": 20,
+      "height": 3
+    },
+    {
+      "type": "Container",
+      "name": "address",
+      "label": "Address",
+      "row": 1,
+      "col": 12,
+      "width": 68,
+      "height": 15,
+      "children": [
+        {
+          "type": "Input",
+          "name": "first_name",
+          "value": "Greg",
+          "row": 0,
+          "col": 8,
+          "width": 49,
+          "height": 3,
+          "placeholder": "first name"
+        },
+        {
+          "type": "Input",
+          "name": "last_name",
+          "value": "Smith",
+          "row": 3,
+          "col": 8,
+          "width": 48,
+          "height": 3,
+          "placeholder": "last name"
+        },
+        {
+          "type": "Input",
+          "name": "address",
+          "value": "13620 Cradle Hill Road",
+          "row": 6,
+          "col": 8,
+          "width": 49,
+          "height": 3,
+          "placeholder": "address"
+        },
+        {
+          "type": "Label",
+          "name": "_label",
+          "label": "First:",
+          "row": 1,
+          "col": 2,
+          "width": 6,
+          "height": 6
+        },
+        {
+          "type": "Label",
+          "name": "_label",
+          "label": "Street:",
+          "row": 7,
+          "col": 1,
+          "width": 7,
+          "height": 8
+        }
+      ]
+    },
+    {
+      "type": "TextArea",
+      "name": "_output",
+      "value": "",
+      "row": 19,
+      "col": 12,
+      "width": 68,
+      "height": 14,
+      "placeholder": "placeholder"
+    },
+    {
+      "type": "Button",
+      "name": "dump",
+      "label": "Dump Env",
+      "command": "env",
+      "target": "_output",
+      "row": 16,
+      "col": 56,
+      "width": 24,
+      "height": 3
+    },
+    {
+      "type": "Button",
+      "name": "ls",
+      "label": "List Files",
+      "command": "ls",
+      "target": "_output",
+      "row": 16,
+      "col": 34,
+      "width": 18,
+      "height": 3
+    },
+    {
+      "type": "Button",
+      "name": "_",
+      "label": "Show JSON",
+      "command": "cat a.json",
+      "target": "_tree",
+      "row": 16,
+      "col": 81,
+      "width": 24,
+      "height": 3
+    },
+    {
+      "type": "Button",
+      "name": "_",
+      "label": "DIALOG",
+      "command": "./dialog.sh \"First Name: $address_first_name\"",
+      "target": "_output",
+      "row": 13,
+      "col": 102,
+      "width": 20,
+      "height": 3
+    },
+    {
+      "type": "Button",
+      "name": "_",
+      "label": "Show a.sh",
+      "command": "cat a.sh",
+      "target": "_output",
+      "row": 16,
+      "col": 106,
+      "width": 24,
+      "height": 3
+    }
+  ]
+}

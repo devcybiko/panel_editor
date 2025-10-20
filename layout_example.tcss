@@ -1,0 +1,22 @@
+#container {
+    border: heavy orange;
+    height: 10;
+    width: 25;
+}
+
+/* This widget is positioned relative to its normal layout position */
+#relative-widget {
+    background: #555555;
+    color: #cccccc;
+    width: 1fr;
+    offset: 2 2;
+}
+
+/* This widget is positioned relative to the top-left of the container */
+#absolute-widget {
+    background: #880000;
+    color: #cccccc;
+    width: 1fr;
+    position: absolute;
+    offset: 2 2;
+}

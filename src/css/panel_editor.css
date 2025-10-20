@@ -1,0 +1,136 @@
+Container {
+    align: center middle;
+    padding: 2;
+}
+
+Vertical {
+    width: 100%;
+    height: auto;
+    border: solid $primary;
+    padding: 2;
+}
+
+#instructions {
+    text-style: bold;
+    color: $accent;
+    text-align: center;
+    margin: 1 0;
+}
+
+#mode_status {
+    color: $warning;
+    text-align: center;
+    margin: 1 0;
+    text-style: bold;
+}
+
+#widget_container {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+}
+
+.draggable-label {
+    position: absolute;
+    background: $surface;
+    border: none;
+    height: 1;
+    padding: 0;
+    margin: 0;
+}
+
+.draggable-tree {
+    border: solid $primary;
+    border-title-align: center;
+    padding: 1;
+}
+
+.draggable-button,
+.draggable-datatable,
+.draggable-input,
+.draggable-textarea {
+    position: absolute;
+    background: $surface;
+    border: solid $primary;
+    padding: 0;
+    margin: 0;
+}
+
+.draggable-button {
+    position: absolute;
+    margin: 0;
+    min-width: 20;
+    height: 3;
+    padding: 0 2;
+}
+
+.draggable-button:hover {
+    border: solid $accent;
+}
+
+.container {
+    background: $surface;
+    color: $text;
+}
+
+#widget_container {
+    background: $surface;
+    height: 100vh;
+    width: 100vw;
+}
+
+.draggable-button:focus,
+.draggable-input:focus,
+.draggable-textarea:focus {
+    border: solid $accent;
+}
+
+/* Clean up all Input widgets */
+Input {
+    border: none;
+    background: $surface;
+    height: 3;
+    padding: 0 1;
+    margin: 0;
+}
+
+/* Style the draggable inputs specifically */
+.draggable-input {
+    border: solid $primary;
+    background: $surface;
+    padding: 0 1;
+    margin: 0;
+}
+
+/* Style the draggable textarea specifically */
+.draggable-textarea {
+    border: solid $primary;
+    background: $surface;
+    padding: 1;
+    margin: 0;
+}
+
+/* Remove any cursor artifacts */
+Input > .input--cursor {
+    color: $text;
+    background: transparent;
+    text-style: none;
+}
+
+#main_content {
+    max-width: 120;
+}
+
+.draggable-container {
+    border: solid orange;
+    width: 30;
+    height: 15;
+    background: $surface;
+    position: absolute;
+    border-title-align: center;
+    align: left top;
+    margin: 0;
+    padding: 1;
+}
