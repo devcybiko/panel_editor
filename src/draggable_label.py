@@ -23,6 +23,7 @@ class DraggableLabel(DraggableWidget, PropertiesWidget, Label):
         Label.__init__(self, classes="draggable-label", *args, **kwargs)
         PropertiesWidget.__init__(self, props)
         DraggableWidget.__init__(self)
+        self.is_sizable = False
         self.update()
 
     def update(self, props=None):

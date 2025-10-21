@@ -24,6 +24,7 @@ class TreeProperties:
     placeholder: str = "placeholder"
     backing_file: str = ""
     key: str = ""
+    target: str = ""
 
 class DraggableTree(DraggableWidget, PropertiesWidget, FilebackedWidget, Tree):    
     def __init__(self, props: TreeProperties = None,*args, **kwargs):
@@ -97,3 +98,10 @@ class DraggableTree(DraggableWidget, PropertiesWidget, FilebackedWidget, Tree):
             text = text.strip()
             pyperclip.copy(text)
             self.app.notify(f"Copied: {text}", severity="information")
+            if self.props.target:
+                widget = self.app.panel.find_widget(self.props.target)
+                if widget and hasattr(widget.props, 'value'):
+                    widget.props.value = text
+                    widget.update()
+                else:
+                    self.app.notify(f"Widget '{self.props.target}' not found", severity="error")

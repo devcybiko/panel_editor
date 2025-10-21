@@ -8,10 +8,20 @@
   "height": 100,
   "children": [
     {
+      "type": "Input",
+      "name": "selected",
+      "value": "placeholder",
+      "row": 23,
+      "col": 93,
+      "width": 40,
+      "height": 3,
+      "placeholder": "placeholder"
+    },
+    {
       "type": "TextArea",
       "name": "_a.jnk",
       "value": "",
-      "row": 23,
+      "row": 32,
       "col": 80,
       "width": 49,
       "height": 17,
@@ -30,7 +40,8 @@
       "height": 18,
       "placeholder": "placeholder",
       "backing_file": "a.json",
-      "key": "name"
+      "key": "name",
+      "target": "selected"
     },
     {
       "type": "DataTable",
@@ -191,6 +202,15 @@
       "col": 23,
       "width": 20,
       "height": 3
+    },
+    {
+      "type": "Label",
+      "name": "_",
+      "label": "Selected:",
+      "row": 24,
+      "col": 83,
+      "width": 9,
+      "height": 0
     }
   ]
 }
