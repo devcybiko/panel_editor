@@ -26,6 +26,10 @@ class PanelEditor(App):
     ]
     CSS_PATH = "./css/panel_editor.css"
 
+    def __init__(self, filename="a.json"):
+        super().__init__()
+        self.filename = filename
+
     def compose(self) -> ComposeResult:
         yield Container(id="widget_container")
         yield Footer()
@@ -82,10 +86,10 @@ class PanelEditor(App):
 
     def action_save_panel(self) -> None:
         widgets_data = self.container_to_dict(self.container)        
-        with open("a.json", "w") as f:
+        with open(self.filename, "w") as f:
             json.dump(widgets_data, f, indent=2)
             f.flush()  # Ensure data is written to disk
-        self.notify("File saved to a.json", severity="information")
+        self.notify(f"File saved to {self.filename}", severity="information")
 
     def load_widgets(self, widgets_data, container) -> None:
         for widget_data in widgets_data:
@@ -122,12 +126,12 @@ class PanelEditor(App):
                 self.load_widgets(children, widget)
 
     def action_load_panel(self) -> None:
-        with open("a.json", "r") as f:
+        with open(self.filename, "r") as f:
             panel_data = json.load(f)
         self.action_remove_all_widgets()
         widgets = panel_data.get("children", [])
         self.load_widgets(widgets, self.container)
-        self.notify(f"Loaded {len(widgets)} widgets from a.json", severity="information")
+        self.notify(f"Loaded {len(widgets)} widgets from {self.filename}", severity="information")
 
     def get_all_widgets(self) -> list:
         all_widgets = []
@@ -181,9 +185,22 @@ class PanelEditor(App):
 
 
 
-app = PanelEditor()
+
+
+def parse_args():
+    import argparse
+    parser = argparse.ArgumentParser(description="Panel Editor")
+    parser.add_argument("filename", nargs="?", default="a.json", help="Panel file to edit (default: a.json)")
+    return parser.parse_args()
 
 def main():
+    import os
+    args = parse_args()
+    # If the file does not exist, create it with an empty dict
+    if not os.path.exists(args.filename):
+        with open(args.filename, "w") as f:
+            json.dump({}, f)
+    app = PanelEditor(args.filename)
     app.run()
 
 if __name__ == "__main__":
