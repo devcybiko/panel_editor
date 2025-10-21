@@ -1,11 +1,14 @@
+
 from cProfile import label
 from dataclasses import dataclass
 import os
+import json
+import pyperclip
 from textual.widgets import Tree
 from mixins.draggable_widget import DraggableWidget
 from mixins.properties_widget import PropertiesWidget
 from mixins.filebacked_widget import FilebackedWidget
-import json
+
 
 
 @dataclass
@@ -20,6 +23,7 @@ class TreeProperties:
     height: int = 3
     placeholder: str = "placeholder"
     backing_file: str = ""
+    key: str = ""
 
 class DraggableTree(DraggableWidget, PropertiesWidget, FilebackedWidget, Tree):    
     def __init__(self, props: TreeProperties = None,*args, **kwargs):
@@ -43,19 +47,25 @@ class DraggableTree(DraggableWidget, PropertiesWidget, FilebackedWidget, Tree):
     def expand_all(self):
         self._expand_all_nodes(self.root)
 
-    def add_dict_to_tree(self, node, data):
+    def add_dict_to_tree(self, node, data, name=None):
         if isinstance(data, dict):
             for key, value in data.items():
-                if type(value) in (dict, list):
+                if type(value) == list:
                     child = node.add(str(key))
-                    self.add_dict_to_tree(child, value)
+                    self.add_dict_to_tree(child, value, None)
+                elif type(value) == dict:
+                    name = str(key)
+                    child = node.add(name)
+                    self.add_dict_to_tree(child, value, name)
                 else:
                     node.add_leaf(f"{key}: {value}")
         elif isinstance(data, list):
             i = 0
             for item in data:
-                child = node.add(f"Child {i}")
-                self.add_dict_to_tree(child, item)
+                if isinstance(item, dict):
+                    name = item.get(self.props.key, None)
+                child = node.add(name or f"<Child {i}>")
+                self.add_dict_to_tree(child, item, None)
                 i += 1
         else:
             node.add(str(data))
@@ -70,9 +80,18 @@ class DraggableTree(DraggableWidget, PropertiesWidget, FilebackedWidget, Tree):
         try:
             data = json.loads(self.props.value)
             self.clear()
-            self.add_dict_to_tree(self.root, data)
+            self.add_dict_to_tree(self.root, data, self.props.backing_file or "Root")
             self.expand_all()
         except json.JSONDecodeError:
             self.app.log("Invalid JSON data for Tree widget")
             pass
 
+    def on_click(self, event):
+        # Try to get the node from the event if possible
+        node = getattr(event, "node", None)
+        if node is None:
+            # Fallback: try to get the highlighted node
+            node = self.cursor_node if hasattr(self, "cursor_node") else None
+        if node:
+            pyperclip.copy(str(node.label))
+            self.app.notify(f"Copied: {node.label}", severity="information")

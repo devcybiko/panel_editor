@@ -29,7 +29,8 @@
       "width": 48,
       "height": 18,
       "placeholder": "placeholder",
-      "backing_file": "a.json"
+      "backing_file": "a.json",
+      "key": "name"
     },
     {
       "type": "DataTable",

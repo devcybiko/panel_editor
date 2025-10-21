@@ -1,0 +1,30 @@
+{
+  "baz": {
+    "foo": {
+      "name": "Foo Node",
+      "boos": [
+        {
+          "no_name": "alpha",
+          "value": 123
+        },
+        {
+          "no_name": "beta",
+          "value": 456
+        }
+      ]
+    },
+    "bar": {
+      "name": "Bar Node",
+      "boos": [
+        {
+          "name": "alpha",
+          "value": 123
+        },
+        {
+          "no_name": "beta",
+          "value": 456
+        }
+      ]
+    }
+  }
+}
