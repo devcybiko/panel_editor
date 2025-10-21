@@ -57,6 +57,7 @@ class DraggableTextArea(DraggableWidget, PropertiesWidget, FilebackedWidget, Tex
             col = 0
             row += 1
         row = 0
+        self.app.notify("Searching from top...")
         for line in lines:
             new_col = line[col:].find(pattern)
             if new_col != -1:
