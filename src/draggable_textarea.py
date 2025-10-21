@@ -47,4 +47,6 @@ class DraggableTextArea(DraggableWidget, PropertiesWidget, FilebackedWidget, Tex
         index = content.find(pattern)
         if index != -1:
             self.cursor_position = index
+            self.focus()         # Ensure the widget is focused
+            self.refresh()       # Force redraw
         return index
