@@ -56,4 +56,14 @@ class DraggableTextArea(DraggableWidget, PropertiesWidget, FilebackedWidget, Tex
                 return self.cursor_location
             col = 0
             row += 1
+        row = 0
+        for line in lines:
+            new_col = line[col:].find(pattern)
+            if new_col != -1:
+                self.cursor_location = (row, new_col)
+                self.focus()         # Ensure the widget is focused
+                self.refresh()       # Force redraw
+                return self.cursor_location
+            col = 0
+            row += 1
         return (row, col)
