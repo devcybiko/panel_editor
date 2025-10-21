@@ -6,6 +6,10 @@ class text(str):
     """A type hint for multi-line or long text fields."""
     pass
 
+class code(str):
+    """A type hint for multi-line code fields."""
+    pass
+
 class PropertiesWidget:
     def __init__(self, props: dataclass, *args, **kwargs):
         self.props = props

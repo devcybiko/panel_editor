@@ -117,7 +117,7 @@ class PropertiesSheet(ModalScreen):
         self.title = title
     
     def compose(self) -> ComposeResult:
-        from mixins.properties_widget import text
+        from mixins.properties_widget import text, code
 
         ## props is guaranteed to be non-null
         props = self.widget_to_edit.props
@@ -133,6 +133,13 @@ class PropertiesSheet(ModalScreen):
                 input_widget.value = str(field_value)
             elif field.type == text:
                 input_widget = TextArea(classes="property-textarea-command", id=f"{field.name}_input")
+                input_widget.text = str(field_value)
+            elif field.type == code:
+                if props.python:
+                    language = "python"
+                else:
+                    language = "bash"
+                input_widget = TextArea.code_editor(language=language, classes="property-textarea-command", id=f"{field.name}_input")
                 input_widget.text = str(field_value)
             elif field.type == bool:
                 # For boolean fields, use a checkbox input
@@ -158,7 +165,7 @@ class PropertiesSheet(ModalScreen):
         )
     
     def _update_props(self):
-        from mixins.properties_widget import text
+        from mixins.properties_widget import text, code
         result = {}
         props = getattr(self.widget_to_edit, 'props', None)
         if not props:
@@ -175,7 +182,7 @@ class PropertiesSheet(ModalScreen):
                     result[field.name] = int(input_widget.value)
                 elif field.type == str:
                         result[field.name] = input_widget.value
-                elif field.type == text:
+                elif field.type in [code, text]:
                     result[field.name] = input_widget.text
                 else:
                     result[field.name] = input_widget.value

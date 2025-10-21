@@ -2,3 +2,5 @@ textual
 textual-dev
 textual-web
 pyperclip
+munch
+textual[syntax]

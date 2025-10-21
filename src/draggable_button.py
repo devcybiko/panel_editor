@@ -1,7 +1,9 @@
 from dataclasses import dataclass
+import json
+from munch import DefaultMunch
 from textual.widgets import Button
 from mixins.draggable_widget import DraggableWidget
-from mixins.properties_widget import PropertiesWidget, text
+from mixins.properties_widget import PropertiesWidget, text, code
 import os
 
 
@@ -10,7 +12,8 @@ class ButtonProperties:
     type: str = "Button"
     name: str = "_"
     label: str = "New Button"
-    command: text = "env"
+    python: bool = False
+    command: code = "env"
     target: str = ""
     row: int = 0
     col: int = 0
@@ -33,6 +36,35 @@ class DraggableButton(DraggableWidget, PropertiesWidget, Button):
         result = result.replace('\'', '\\\'')
         return result
     
+    def _create_context(self) -> str:
+        context = {}
+        for w in self.app.panel.get_all_widgets():
+            if w.props.name and hasattr(w.props, 'value') and w.props.name[0] != '_':
+                name = w.props.name
+                value = w.props.value
+                context[name] = value
+        return context
+
+    def _python_eval(self, context: dict) -> None:
+        _ = DefaultMunch.fromDict(context)
+        result = None
+        try:
+            exec(self.props.command)
+            result = _.result
+        except Exception as e:
+            self.app.notify(f"Error executing Python command: {e}", severity="error")
+            return
+        if self.props.target and result:
+            if type(result) == dict:
+                result = json.dumps(result)
+            widget = self.app.panel.find_widget(self.props.target)
+            if widget:
+                    widget.props.value = str(result)
+                    widget.update()
+            else:
+                self.app.notify(f"Widget '{self.props.target}' not found", severity="error")
+                # self.app.notify(f"Command Output:\n{output}", severity="information")
+
     def _write_shell_script(self) -> None:
         with open('a.sh', 'w') as f:
             for w in self.app.panel.get_all_widgets():
@@ -65,10 +97,13 @@ class DraggableButton(DraggableWidget, PropertiesWidget, Button):
             event.prevent_default()
             return
 
-        if self.props.command:
+        if self.props.command and not self.props.python:
             self.app.notify(f"Executing command: {self.props.command}", severity="information")
             self._write_shell_script()
             self._exec_shell_script()
+        elif self.props.command and self.props.python:
+            context = self._create_context()
+            self._python_eval(context)
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
         pass
