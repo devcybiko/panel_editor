@@ -4,7 +4,6 @@ from textual.widgets import Button, Label, TextArea, Checkbox, Input
 from textual.screen import ModalScreen
 from textual.app import ComposeResult
 
-
 class PropertiesSheet(ModalScreen):    
     CSS = """
     PropertiesSheet {
@@ -112,13 +111,14 @@ class PropertiesSheet(ModalScreen):
     }
     """
     
-    def __init__(self, widget_to_edit, title: str, extra_fields: dict = None):
+    def __init__(self, widget_to_edit, title: str):
         super().__init__()
         self.widget_to_edit = widget_to_edit
         self.title = title
-        self.extra_fields = extra_fields or {}
     
     def compose(self) -> ComposeResult:
+        from mixins.properties_widget import text
+
         ## props is guaranteed to be non-null
         props = self.widget_to_edit.props
         content_widgets = []
@@ -131,7 +131,7 @@ class PropertiesSheet(ModalScreen):
             if field.name.lower() in ["type"]:
                 input_widget = Input(disabled=True, classes="property-input readonly-field", id=f"{field.name}_input")
                 input_widget.value = str(field_value)
-            elif field.name.lower() in ["command"]:
+            elif field.type == text:
                 input_widget = TextArea(classes="property-textarea-command", id=f"{field.name}_input")
                 input_widget.text = str(field_value)
             elif field.type == bool:
@@ -143,12 +143,7 @@ class PropertiesSheet(ModalScreen):
             
             # Put label and input side by side in a horizontal container
             content_widgets.append(Horizontal(label, input_widget, classes="property-row"))
-        
-        # for field_name, field_value in self.extra_fields.items():
-        #     label = Label(f"{field_name.title()}:", classes="property-label")
-        #     input_widget = TextArea(text=str(field_value), id=f"{field_name}_input", classes="property-textarea")
-        #     content_widgets.append(Horizontal(label, input_widget, classes="property-row"))
-        
+                
         # Structure: main container with scrollable content and fixed buttons
         yield Container(
             Container(*content_widgets, id="property_content"),
@@ -163,35 +158,31 @@ class PropertiesSheet(ModalScreen):
         )
     
     def _update_props(self):
-            result = {}
-            props = getattr(self.widget_to_edit, 'props', None)
-            if props:
-                for field in fields(props):
-                    # Skip the "type" field since it's read-only and doesn't have an input widget
-                    if field.name.lower() == "type":
-                        result[field.name] = getattr(props, field.name)  # Keep original value
-                        continue
-                        
-                    input_widget = self.query_one(f"#{field.name}_input")
-                    try:
-                        if field.type == int:
-                            result[field.name] = int(input_widget.value)
-                        elif field.type == str:
-                            if isinstance(input_widget, TextArea):
-                                result[field.name] = input_widget.text
-                            else:
-                                result[field.name] = input_widget.value
-                        else:
-                            result[field.name] = input_widget.value
-                    except ValueError:
-                        result[field.name] = input_widget.value  # Keep as string if conversion fails
-            
-            # Collect extra fields after
-            for field_name in self.extra_fields.keys():
-                input_widget = self.query_one(f"#{field_name}_input", TextArea)
-                result[field_name] = input_widget.value
+        from mixins.properties_widget import text
+        result = {}
+        props = getattr(self.widget_to_edit, 'props', None)
+        if not props:
             return result
-
+        for field in fields(props):
+            # Skip the "type" field since it's read-only and doesn't have an input widget
+            if field.name.lower() == "type":
+                result[field.name] = getattr(props, field.name)  # Keep original value
+                continue
+                
+            input_widget = self.query_one(f"#{field.name}_input")
+            try:
+                if field.type == int:
+                    result[field.name] = int(input_widget.value)
+                elif field.type == str:
+                        result[field.name] = input_widget.value
+                elif field.type == text:
+                    result[field.name] = input_widget.text
+                else:
+                    result[field.name] = input_widget.value
+            except ValueError:
+                result[field.name] = input_widget.value 
+        return result
+    
     def on_button_pressed(self, event: Button.Pressed) -> None:
         if event.button.id == "ok_btn":
             result = self._update_props()

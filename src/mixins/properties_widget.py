@@ -1,7 +1,10 @@
 from dataclasses import dataclass
-from textual.events import MouseDown, MouseUp, MouseMove
 from properties_sheet import PropertiesSheet
 from widget_factory import WidgetFactory
+
+class text(str):
+    """A type hint for multi-line or long text fields."""
+    pass
 
 class PropertiesWidget:
     def __init__(self, props: dataclass, *args, **kwargs):

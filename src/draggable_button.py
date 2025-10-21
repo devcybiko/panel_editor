@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from textual.widgets import Button
 from mixins.draggable_widget import DraggableWidget
-from mixins.properties_widget import PropertiesWidget
+from mixins.properties_widget import PropertiesWidget, text
 import os
 
 
@@ -10,7 +10,7 @@ class ButtonProperties:
     type: str = "Button"
     name: str = "_"
     label: str = "New Button"
-    command: str = "env"
+    command: text = "env"
     target: str = ""
     row: int = 0
     col: int = 0
