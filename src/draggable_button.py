@@ -45,7 +45,7 @@ class DraggableButton(DraggableWidget, PropertiesWidget, Button):
             f.write(f'{self.props.command}\n')
     
     def _exec_shell_script(self) -> None:
-        os.system(f"source a.sh 2>&1 > a.out")
+        os.system(f"source a.sh 2>a.err > a.out")
         with open('a.out', 'r') as f:
             output = f.read()
             widget = self.app.panel.find_widget(self.props.target)
@@ -55,6 +55,10 @@ class DraggableButton(DraggableWidget, PropertiesWidget, Button):
             else:
                 self.app.notify(f"Widget '{self.props.target}' not found", severity="error")
                 # self.app.notify(f"Command Output:\n{output}", severity="information")
+        with open('a.err', 'r') as f:
+            output = f.read().strip()
+            if output:
+                self.app.notify(f"Command Error Output:\n{output}", severity="error")
 
     def on_click(self, event: "Click") -> None:
         if event.button == 3:
