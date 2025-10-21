@@ -62,6 +62,7 @@ class DraggableButton(DraggableWidget, PropertiesWidget, Button):
             return
 
         if self.props.command:
+            self.app.notify(f"Executing command: {self.props.command}", severity="information")
             self._write_shell_script()
             self._exec_shell_script()
 

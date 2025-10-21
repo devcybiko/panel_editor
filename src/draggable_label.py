@@ -13,7 +13,7 @@ class LabelProperties:
     row: int = 0
     col: int = 0
     width: int = 20
-    height: int = 3
+    height: int = 1
 
 class DraggableLabel(DraggableWidget, PropertiesWidget, Label):    
     def __init__(self, props: LabelProperties = None, *args, **kwargs):
