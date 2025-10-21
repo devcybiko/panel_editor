@@ -45,14 +45,15 @@ class DraggableTextArea(DraggableWidget, PropertiesWidget, FilebackedWidget, Tex
         """Scroll the given TextArea to the first occurrence of pattern and position the cursor there"""
         content = self.text
         lines = content.splitlines()
-        row = 0
-        col = 0
-        for line in lines:
-            col = line.find(pattern)
-            if col != -1:
-                self.cursor_location = (row, col)
+        row, col = self.cursor_location
+        col += 1
+        for line in lines[row:]:
+            new_col = line[col:].find(pattern)
+            if new_col != -1:
+                self.cursor_location = (row, new_col)
                 self.focus()         # Ensure the widget is focused
                 self.refresh()       # Force redraw
-                return
+                return self.cursor_location
+            col = 0
             row += 1
         return (row, col)
