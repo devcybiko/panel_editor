@@ -41,7 +41,7 @@ class DraggableTextArea(DraggableWidget, PropertiesWidget, FilebackedWidget, Tex
         self.last_value = self.props.value
         self.text = self.props.value
 
-    def scroll_to(self, pattern):
+    def find(self, pattern):
         """Scroll the given TextArea to the first occurrence of pattern and position the cursor there"""
         content = self.text
         lines = content.splitlines()
