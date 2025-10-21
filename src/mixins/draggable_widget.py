@@ -156,3 +156,12 @@ class DraggableWidget:
                 return
             self.start_dragging(event)
             event.prevent_default()
+
+    def scroll_to(self, text_widget, pattern):
+        """Scroll the given TextArea to the first occurrence of pattern"""
+        content = text_widget.text
+        lines = content.splitlines()
+        for i, line in enumerate(lines):
+            if pattern in line:
+                text_widget.scroll_to_line(i)
+                return
