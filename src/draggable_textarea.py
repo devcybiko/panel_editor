@@ -47,3 +47,4 @@ class DraggableTextArea(DraggableWidget, PropertiesWidget, FilebackedWidget, Tex
         index = content.find(pattern)
         if index != -1:
             self.cursor_position = index
+        return index
