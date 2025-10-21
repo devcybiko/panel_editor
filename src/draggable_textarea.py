@@ -41,9 +41,12 @@ class DraggableTextArea(DraggableWidget, PropertiesWidget, FilebackedWidget, Tex
         self.last_value = self.props.value
         self.text = self.props.value
 
-    def find_pattern(self, pattern):
+    def find_pattern(self, pattern, case_sensitive=True, regex=False):
         """Scroll the given TextArea to the first occurrence of pattern and position the cursor there"""
         content = self.text
+        if not case_sensitive:
+            content = content.lower()
+            pattern = pattern.lower()
         lines = content.splitlines()
         row, col = self.cursor_location
         col += 1
