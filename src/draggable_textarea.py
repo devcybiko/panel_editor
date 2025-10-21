@@ -64,6 +64,8 @@ class DraggableTextArea(DraggableWidget, PropertiesWidget, FilebackedWidget, Tex
                 self.cursor_location = (row, new_col)
                 self.focus()         # Ensure the widget is focused
                 self.refresh()       # Force redraw
+                self.action_scroll_down()
+                self.action_scroll_down()
                 return self.cursor_location
             col = 0
             row += 1
@@ -83,6 +85,8 @@ class DraggableTextArea(DraggableWidget, PropertiesWidget, FilebackedWidget, Tex
                 self.cursor_location = (row, new_col)
                 self.focus()         # Ensure the widget is focused
                 self.refresh()       # Force redraw
+                self.action_scroll_down()
+                self.action_scroll_down()
                 return self.cursor_location
             col = 0
             row += 1
