@@ -70,7 +70,15 @@ class DraggableTextArea(DraggableWidget, PropertiesWidget, FilebackedWidget, Tex
         row = 0
         self.app.notify("Searching from top...")
         for line in lines:
-            new_col = line[col:].find(pattern)
+            if regex:
+                import re
+                match = re.search(pattern, line[col:])
+                if match:
+                    new_col = match.start()
+                else:
+                    new_col = -1
+            else:
+                new_col = line[col:].find(pattern)
             if new_col != -1:
                 self.cursor_location = (row, new_col)
                 self.focus()         # Ensure the widget is focused
@@ -78,4 +86,5 @@ class DraggableTextArea(DraggableWidget, PropertiesWidget, FilebackedWidget, Tex
                 return self.cursor_location
             col = 0
             row += 1
+        self.app.notify("Pattern not found.", severity="warning")
         return (row, col)
