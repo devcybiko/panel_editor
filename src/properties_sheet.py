@@ -1,6 +1,6 @@
 from dataclasses import fields
 from textual.containers import Container, Horizontal
-from textual.widgets import Button, Label, Input, Checkbox
+from textual.widgets import Button, Label, TextArea, Checkbox
 from textual.screen import ModalScreen
 from textual.app import ComposeResult
 from widget_factory import WidgetFactory
@@ -48,7 +48,7 @@ class PropertiesSheet(ModalScreen):
     }
     
     .property-label {
-        width: 20%;
+        width: 25%;
         height: 3;
         text-style: bold;
         padding: 0 0 0 0;
@@ -56,8 +56,13 @@ class PropertiesSheet(ModalScreen):
         content-align: center middle;
     }
     
-    .property-input {
-        width: 80%;
+    .property-textarea {
+        width: 75%;
+        height: 3;
+        background: $surface;
+        border: solid $primary;
+        padding: 0;
+        margin: 0;
     }
     
     .readonly-field {
@@ -107,19 +112,21 @@ class PropertiesSheet(ModalScreen):
             
             # Make "type" field read-only by using a disabled input
             if field.name.lower() in ["type"]:
-                input_widget = Input(value=str(field_value), disabled=True, classes="property-input readonly-field", id=f"{field.name}_input")
+                input_widget = TextArea(disabled=True, classes="property-textarea readonly-field", id=f"{field.name}_input")
+                input_widget.text = str(field_value)
             elif field.type == bool:
                 # For boolean fields, use a checkbox input
                 input_widget = Checkbox(value=field_value, id=f"{field.name}_input")
-            else:                                                                                                                  
-                input_widget = Input(value=str(field_value), id=f"{field.name}_input", classes="property-input")
+            else:
+                input_widget = TextArea(id=f"{field.name}_input", classes="property-textarea")
+                input_widget.text = str(field_value)
             
             # Put label and input side by side in a horizontal container
             content_widgets.append(Horizontal(label, input_widget, classes="property-row"))
         
         # for field_name, field_value in self.extra_fields.items():
         #     label = Label(f"{field_name.title()}:", classes="property-label")
-        #     input_widget = Input(value=str(field_value), id=f"{field_name}_input", classes="property-input")
+        #     input_widget = TextArea(text=str(field_value), id=f"{field_name}_input", classes="property-textarea")
         #     content_widgets.append(Horizontal(label, input_widget, classes="property-row"))
         
         # Structure: main container with scrollable content and fixed buttons
@@ -158,7 +165,7 @@ class PropertiesSheet(ModalScreen):
             
             # Collect extra fields after
             for field_name in self.extra_fields.keys():
-                input_widget = self.query_one(f"#{field_name}_input", Input)
+                input_widget = self.query_one(f"#{field_name}_input", TextArea)
                 result[field_name] = input_widget.value
             return result
 

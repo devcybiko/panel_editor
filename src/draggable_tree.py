@@ -93,5 +93,7 @@ class DraggableTree(DraggableWidget, PropertiesWidget, FilebackedWidget, Tree):
             # Fallback: try to get the highlighted node
             node = self.cursor_node if hasattr(self, "cursor_node") else None
         if node:
-            pyperclip.copy(str(node.label))
-            self.app.notify(f"Copied: {node.label}", severity="information")
+            text = str(node.label).split(":",1)[1] if ":" in str(node.label) else str(node.label)
+            text = text.strip()
+            pyperclip.copy(text)
+            self.app.notify(f"Copied: {text}", severity="information")
