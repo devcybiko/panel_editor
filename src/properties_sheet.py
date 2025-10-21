@@ -1,9 +1,8 @@
 from dataclasses import fields
 from textual.containers import Container, Horizontal
-from textual.widgets import Button, Label, TextArea, Checkbox
+from textual.widgets import Button, Label, TextArea, Checkbox, Input
 from textual.screen import ModalScreen
 from textual.app import ComposeResult
-from widget_factory import WidgetFactory
 
 
 class PropertiesSheet(ModalScreen):    
@@ -64,6 +63,24 @@ class PropertiesSheet(ModalScreen):
         padding: 0;
         margin: 0;
     }
+
+    .property-input {
+        width: 75%;
+        height: 3;
+        background: $surface;
+        border: solid $primary;
+        padding: 0;
+        margin: 0;
+    }
+
+    .property-textarea-command {
+        width: 75%;
+        height: 6;
+        background: $surface;
+        border: solid $primary;
+        padding: 0;
+        margin: 0;
+    }
     
     .readonly-field {
         color: $text-muted;
@@ -112,14 +129,17 @@ class PropertiesSheet(ModalScreen):
             
             # Make "type" field read-only by using a disabled input
             if field.name.lower() in ["type"]:
-                input_widget = TextArea(disabled=True, classes="property-textarea readonly-field", id=f"{field.name}_input")
+                input_widget = Input(disabled=True, classes="property-input readonly-field", id=f"{field.name}_input")
+                input_widget.value = str(field_value)
+            elif field.name.lower() in ["command"]:
+                input_widget = TextArea(classes="property-textarea-command", id=f"{field.name}_input")
                 input_widget.text = str(field_value)
             elif field.type == bool:
                 # For boolean fields, use a checkbox input
                 input_widget = Checkbox(value=field_value, id=f"{field.name}_input")
             else:
-                input_widget = TextArea(id=f"{field.name}_input", classes="property-textarea")
-                input_widget.text = str(field_value)
+                input_widget = Input(id=f"{field.name}_input", classes="property-input")
+                input_widget.value = str(field_value)
             
             # Put label and input side by side in a horizontal container
             content_widgets.append(Horizontal(label, input_widget, classes="property-row"))
@@ -157,7 +177,10 @@ class PropertiesSheet(ModalScreen):
                         if field.type == int:
                             result[field.name] = int(input_widget.value)
                         elif field.type == str:
-                            result[field.name] = input_widget.value
+                            if isinstance(input_widget, TextArea):
+                                result[field.name] = input_widget.text
+                            else:
+                                result[field.name] = input_widget.value
                         else:
                             result[field.name] = input_widget.value
                     except ValueError:
