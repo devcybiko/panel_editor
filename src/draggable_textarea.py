@@ -4,6 +4,7 @@ from textual.widgets import TextArea
 from mixins.draggable_widget import DraggableWidget
 from mixins.properties_widget import PropertiesWidget
 from mixins.filebacked_widget import FilebackedWidget
+import re
 
 @dataclass
 class TextAreaProperties:
@@ -41,6 +42,23 @@ class DraggableTextArea(DraggableWidget, PropertiesWidget, FilebackedWidget, Tex
         self.last_value = self.props.value
         self.text = self.props.value
 
+    def _find_in_rows(self, lines, row, col, pattern, regex):
+        for line in lines[row:]:
+            if regex:
+                match = re.search(pattern, line[col:])
+                new_col = match.start() if match else -1
+            else:
+                new_col = line[col:].find(pattern)
+            if new_col != -1:
+                self.cursor_location = (row, new_col)
+                self.focus()         # Ensure the widget is focused
+                self.refresh()       # Force redraw
+                return self.cursor_location
+            col = 0
+            row += 1
+        return (row, col)
+
+
     def find_pattern(self, pattern, case_sensitive=True, regex=False):
         """Scroll the given TextArea to the first occurrence of pattern and position the cursor there"""
         content = self.text
@@ -50,45 +68,14 @@ class DraggableTextArea(DraggableWidget, PropertiesWidget, FilebackedWidget, Tex
         lines = content.splitlines()
         row, col = self.cursor_location
         col += 1
-        for line in lines[row:]:
-            if regex:
-                import re
-                match = re.search(pattern, line[col:])
-                if match:
-                    new_col = match.start()
-                else:
-                    new_col = -1
-            else:
-                new_col = line[col:].find(pattern)
-            if new_col != -1:
-                self.cursor_location = (row, new_col)
-                self.focus()         # Ensure the widget is focused
-                self.refresh()       # Force redraw
-                self.action_scroll_down()
-                self.action_scroll_down()
-                return self.cursor_location
-            col = 0
-            row += 1
+        row, col = self._find_in_rows(lines, row, col, pattern, regex)
+        if row < len(lines):
+            return (row, col)
+        self.app.notify("Reached end of document, continuing search from top.", severity="info")
         row = 0
-        self.app.notify("Searching from top...")
-        for line in lines:
-            if regex:
-                import re
-                match = re.search(pattern, line[col:])
-                if match:
-                    new_col = match.start()
-                else:
-                    new_col = -1
-            else:
-                new_col = line[col:].find(pattern)
-            if new_col != -1:
-                self.cursor_location = (row, new_col)
-                self.focus()         # Ensure the widget is focused
-                self.refresh()       # Force redraw
-                self.action_scroll_down()
-                self.action_scroll_down()
-                return self.cursor_location
-            col = 0
-            row += 1
+        col = 0
+        row, col = self._find_in_rows(lines, row, col, pattern, regex)
+        if row < len(lines):
+            return (row, col)
         self.app.notify("Pattern not found.", severity="warning")
         return (row, col)

@@ -8,12 +8,22 @@
   "height": 100,
   "children": [
     {
+      "type": "Input",
+      "name": "pattern",
+      "value": "j.*",
+      "row": 26,
+      "col": 112,
+      "width": 40,
+      "height": 3,
+      "placeholder": "placeholder"
+    },
+    {
       "type": "Button",
       "name": "_",
-      "label": "New Button",
+      "label": "find",
       "python": true,
-      "command": "w=self.app.panel.find_widget(\"_tree\")\nw.props.value='{\"foo\":\"bar\"}'\n_.result=\"Success!\"",
-      "target": "_output",
+      "command": "w=self.find_widget(\"_output\")\nif w:\n    w.find_pattern(_.pattern, case_sensitive=False, regex=True)\nelse:\n    self.app.notify(f\"_output could not be found\")",
+      "target": "",
       "row": 26,
       "col": 91,
       "width": 20,
@@ -22,7 +32,7 @@
     {
       "type": "Input",
       "name": "selected",
-      "value": "Button",
+      "value": "Input",
       "row": 23,
       "col": 93,
       "width": 40,
@@ -84,7 +94,7 @@
       "name": "address",
       "label": "Address",
       "row": 1,
-      "col": 14,
+      "col": 16,
       "width": 61,
       "height": 13,
       "children": [

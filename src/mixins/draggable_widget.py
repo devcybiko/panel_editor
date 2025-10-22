@@ -157,3 +157,5 @@ class DraggableWidget:
             self.start_dragging(event)
             event.prevent_default()
 
+    def find_widget(self, name: str) -> 'DraggableWidget | None':
+        return self.app.panel.find_widget(name)
