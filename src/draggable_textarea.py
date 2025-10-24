@@ -43,6 +43,7 @@ class DraggableTextArea(DraggableWidget, PropertiesWidget, FilebackedWidget, Tex
         self.text = self.props.value
 
     def _find_in_rows(self, lines, row, col, pattern, regex):
+        self.app.notify(f"Searching for pattern '{pattern}' at {row, col}", severity="info")
         for line in lines[row:]:
             if regex:
                 match = re.search(pattern, line[col:])
@@ -67,15 +68,18 @@ class DraggableTextArea(DraggableWidget, PropertiesWidget, FilebackedWidget, Tex
             pattern = pattern.lower()
         lines = content.splitlines()
         row, col = self.cursor_location
+        self.app.notify(f"cURSOR= {row, col}", severity="info")
         col += 1
         row, col = self._find_in_rows(lines, row, col, pattern, regex)
         if row < len(lines):
+            self.app.notify(f"Pattern found {row, col}", severity="info")
             return (row, col)
         self.app.notify("Reached end of document, continuing search from top.", severity="info")
         row = 0
         col = 0
         row, col = self._find_in_rows(lines, row, col, pattern, regex)
         if row < len(lines):
+            self.app.notify(f"^ Pattern found {row,col}", severity="info")
             return (row, col)
         self.app.notify("Pattern not found.", severity="warning")
         return (row, col)

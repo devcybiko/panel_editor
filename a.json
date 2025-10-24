@@ -10,9 +10,9 @@
     {
       "type": "Input",
       "name": "pattern",
-      "value": "j.*",
-      "row": 26,
-      "col": 112,
+      "value": "greg",
+      "row": 27,
+      "col": 93,
       "width": 40,
       "height": 3,
       "placeholder": "placeholder"
@@ -24,17 +24,17 @@
       "python": true,
       "command": "w=self.find_widget(\"_output\")\nif w:\n    w.find_pattern(_.pattern, case_sensitive=False, regex=True)\nelse:\n    self.app.notify(f\"_output could not be found\")",
       "target": "",
-      "row": 26,
-      "col": 91,
-      "width": 20,
+      "row": 27,
+      "col": 81,
+      "width": 12,
       "height": 3
     },
     {
       "type": "Input",
       "name": "selected",
-      "value": "Input",
-      "row": 23,
-      "col": 93,
+      "value": "Root",
+      "row": 24,
+      "col": 94,
       "width": 40,
       "height": 3,
       "placeholder": "placeholder"
@@ -50,20 +50,6 @@
       "placeholder": "placeholder",
       "backing_file": "a.jnk",
       "readonly": false
-    },
-    {
-      "type": "Tree",
-      "name": "_tree",
-      "label": "Root",
-      "value": "",
-      "row": -13,
-      "col": 10,
-      "width": 48,
-      "height": 18,
-      "placeholder": "placeholder",
-      "backing_file": "a.json",
-      "key": "name",
-      "target": "selected"
     },
     {
       "type": "DataTable",
@@ -236,10 +222,24 @@
       "type": "Label",
       "name": "_",
       "label": "Selected:",
-      "row": 24,
-      "col": 83,
+      "row": 25,
+      "col": 84,
       "width": 9,
       "height": 0
+    },
+    {
+      "type": "Tree",
+      "name": "_tree",
+      "label": "Root",
+      "value": "",
+      "row": 1,
+      "col": 82,
+      "width": 50,
+      "height": 17,
+      "placeholder": "placeholder",
+      "backing_file": "",
+      "key": "name",
+      "target": "selected"
     }
   ]
 }

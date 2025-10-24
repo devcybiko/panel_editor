@@ -30,15 +30,16 @@ class DraggableTree(DraggableWidget, PropertiesWidget, FilebackedWidget, Tree):
     def __init__(self, props: TreeProperties = None,*args, **kwargs):
         if props is None:
             props = TreeProperties()
-        Tree.__init__(self, "Root", classes="draggable-tree", *args, **kwargs)
+        Tree.__init__(self, "<empty>", classes="draggable-tree", *args, **kwargs)
         PropertiesWidget.__init__(self, props)
         DraggableWidget.__init__(self)
-        # self.update()
+        FilebackedWidget.__init__(self)
+        self.update()
         self.last_load_time = 0
         self.last_value = ""
-        root_node = self.root
-        child1 = root_node.add("Child 1")
-        subchild = child1.add("Subchild 1.1")
+        # root_node = self.root
+        # child1 = root_node.add("Child 1")
+        # subchild = child1.add("Subchild 1.1")
 
     def _expand_all_nodes(self, node):
         node.expand()
@@ -48,25 +49,24 @@ class DraggableTree(DraggableWidget, PropertiesWidget, FilebackedWidget, Tree):
     def expand_all(self):
         self._expand_all_nodes(self.root)
 
-    def add_dict_to_tree(self, node, data, name=None):
+    def add_json_to_tree(self, node, data, name=None):
         if isinstance(data, dict):
             for key, value in data.items():
                 if type(value) == list:
                     child = node.add(str(key))
-                    self.add_dict_to_tree(child, value, None)
+                    self.add_json_to_tree(child, value)
                 elif type(value) == dict:
                     name = str(key)
-                    child = node.add(name)
-                    self.add_dict_to_tree(child, value, name)
+                    node.label = name
+                    child = node.add("node")
+                    self.add_json_to_tree(child, value, name)
                 else:
                     node.add_leaf(f"{key}: {value}")
         elif isinstance(data, list):
             i = 0
             for item in data:
-                if isinstance(item, dict):
-                    name = item.get(self.props.key, None)
-                child = node.add(name or f"<Child {i}>")
-                self.add_dict_to_tree(child, item, None)
+                child = node.add(f"<Child {i}>")
+                self.add_json_to_tree(child, item)
                 i += 1
         else:
             node.add(str(data))
@@ -81,7 +81,7 @@ class DraggableTree(DraggableWidget, PropertiesWidget, FilebackedWidget, Tree):
         try:
             data = json.loads(self.props.value)
             self.clear()
-            self.add_dict_to_tree(self.root, data, self.props.backing_file or "Root")
+            self.add_json_to_tree(self.root, data, self.props.backing_file or "Root")
             self.expand_all()
         except json.JSONDecodeError:
             self.app.log("Invalid JSON data for Tree widget")
