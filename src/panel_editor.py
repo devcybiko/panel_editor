@@ -190,7 +190,7 @@ class PanelEditor(App):
 def parse_args():
     import argparse
     parser = argparse.ArgumentParser(description="Panel Editor")
-    parser.add_argument("filename", nargs="?", default="a.json", help="Panel file to edit (default: a.json)")
+    parser.add_argument("filename", nargs="?", default="./apps/a.json", help="Panel file to edit (default: a.json)")
     return parser.parse_args()
 
 def main():

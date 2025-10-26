@@ -66,7 +66,7 @@ class DraggableButton(DraggableWidget, PropertiesWidget, Button):
                 # self.app.notify(f"Command Output:\n{output}", severity="information")
 
     def _write_shell_script(self) -> None:
-        with open('a.sh', 'w') as f:
+        with open('/tmp/a.sh', 'w') as f:
             for w in self.app.panel.get_all_widgets():
                 if w.props.name and hasattr(w.props, 'value') and w.props.name[0] != '_':
                     name = w.props.name
@@ -77,8 +77,8 @@ class DraggableButton(DraggableWidget, PropertiesWidget, Button):
             f.write(f'{self.props.command}\n')
     
     def _exec_shell_script(self) -> None:
-        os.system(f"source a.sh 2>a.err > a.out")
-        with open('a.out', 'r') as f:
+        os.system(f"source ./tmp/a.sh 2>./tmp/a.err > ./tmp/a.out")
+        with open('./tmp/a.out', 'r') as f:
             output = f.read()
             widget = self.app.panel.find_widget(self.props.target)
             if widget:
@@ -87,7 +87,7 @@ class DraggableButton(DraggableWidget, PropertiesWidget, Button):
             else:
                 self.app.notify(f"Widget '{self.props.target}' not found", severity="error")
                 # self.app.notify(f"Command Output:\n{output}", severity="information")
-        with open('a.err', 'r') as f:
+        with open('/tmp/a.err', 'r') as f:
             output = f.read().strip()
             if output:
                 self.app.notify(f"Command Error Output:\n{output}", severity="error")
