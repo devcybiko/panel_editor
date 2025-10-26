@@ -5,6 +5,7 @@ class WidgetFactory:
     @staticmethod
     def from_properties(props: dataclass) -> any:
         from draggable_button import DraggableButton
+        from draggable_checkbox import DraggableCheckbox
         from draggable_container import DraggableContainer
         from draggable_input import DraggableInput
         from draggable_label import DraggableLabel
@@ -15,6 +16,8 @@ class WidgetFactory:
         """Create a widget instance based on its properties type"""
         if props.type == "Button":
             return DraggableButton(props)
+        elif props.type == "Checkbox":
+            return DraggableCheckbox(props)
         elif props.type == "Container":
             return DraggableContainer(props)
         elif props.type == "DataTable":

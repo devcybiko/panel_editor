@@ -1,6 +1,11 @@
+export folder="/Users/greg"
+export l=""
 export pattern="greg"
-export selected="Input"
+export selected="<empty>"
 export address_first_name="Greg"
 export address_last_name="Smith"
 export address_street="13620 Cradle Hill Road"
-env
+export a="-a"
+export t=""
+export r=""
+cat ./apps/a.json

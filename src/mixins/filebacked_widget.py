@@ -18,5 +18,10 @@ class FilebackedWidget:
                 self.last_load_time = file_mod_time
                 with open(self.props.backing_file, "r", encoding="utf-8") as f:
                         self.props.value = f.read()
+                if self.last_value == self.props.value:
+                    return
+                self.last_value = self.props.value
+                self.text = self.props.value
+
         except Exception as e:
             self.props.value = f"{self.props.type}: ERROR reading file {self.props.backing_file}: {e}"

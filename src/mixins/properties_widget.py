@@ -15,43 +15,48 @@ class PropertiesWidget:
         self.props = props
         self.type = props.type
 
-    def _update_widget(self, field_name: str, field_value) -> None:
-        if field_name in ("row", "col"):
+    def _update_widget_member(self, property_name: str, property_value) -> None:
+        if property_name in ("row", "col"):
             new_x = self.props.col
             new_y = self.props.row
             self.styles.offset = (new_x, new_y)
             return
-        
-        if hasattr(self.styles, field_name):
-            setattr(self.styles, field_name, field_value)
-            return
-        
-        if field_name in ("name"):
+
+        if property_name in ("name", "border"):
             # These are dataclass-only properties, not widget attributes
             # GLS - should "name" be the "id" of the widget?
             return
-            
-        if hasattr(self, field_name):
-            setattr(self, field_name, field_value)
+
+        if hasattr(self.styles, property_name):
+            setattr(self.styles, property_name, property_value)
+            return
+                    
+        if hasattr(self, property_name):
+            if property_name in ("language"):
+                # Special handling for TextArea code editor properties
+                if self.language == self.props.language:
+                    return
+            if self.type == "Checkbox" and property_name == "value":
+                # Special handling for Checkbox value property
+                return
+            setattr(self, property_name, property_value)
             return
     
         return
     
     def update(self, props=None):
+        from dataclasses import fields, is_dataclass
         if not props:
             props = self.props
         
-        # Handle both dictionary and dataclass properties
         if hasattr(props, 'items'):
             # Dictionary-like object
             items = props.items()
-        else:
+        elif is_dataclass(props):
             # Dataclass object - convert to field_name, field_value pairs
-            from dataclasses import fields, is_dataclass
-            if is_dataclass(props):
-                items = [(field.name, getattr(props, field.name)) for field in fields(props)]
-            else:
-                return  # Can't process this type
+            items = [(field.name, getattr(props, field.name)) for field in fields(props)]
+        else:
+            return  # Can't process this type
         
         # Handle dataclass properties
         for field_name, field_value in items:
@@ -63,7 +68,8 @@ class PropertiesWidget:
             setattr(self.props, field_name, field_value)
             
             # Apply changes using convention-based mapping
-            self._update_widget(field_name, field_value)
+            self._update_widget_member(field_name, field_value)
+        self.refresh()
 
     def show_properties_sheet(self) -> None:
         self.app.push_screen(PropertiesSheet(self, f"{self.type} Properties"), self.update)

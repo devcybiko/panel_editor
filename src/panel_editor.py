@@ -8,6 +8,7 @@ from textual.events import MouseDown
 from draggable_container import ContainerProperties, DraggableContainer
 from draggable_button import DraggableButton, ButtonProperties
 from draggable_input import DraggableInput, InputProperties
+from draggable_checkbox import DraggableCheckbox, CheckboxProperties
 from new_item_modal import NewItemModal
 from draggable_datatable import DraggableDataTable, DataTableProperties
 from draggable_textarea import DraggableTextArea, TextAreaProperties
@@ -24,7 +25,7 @@ class PanelEditor(App):
         ("c", "clear_buttons", "Clear All"),
         ("q", "quit", "Quit"),
     ]
-    CSS_PATH = "./css/panel_editor.css"
+    CSS_PATH = "./css/draggable_widget.css"
 
     def __init__(self, filename="a.json"):
         super().__init__()
@@ -51,6 +52,8 @@ class PanelEditor(App):
         def handle_selection(selection):
             if selection == "button":
                 new_widget = DraggableButton()
+            elif selection == "checkbox":
+                new_widget = DraggableCheckbox()
             elif selection == "container":
                 new_widget = DraggableContainer()
             elif selection == "datatable":
@@ -97,6 +100,17 @@ class PanelEditor(App):
                 props = ButtonProperties(**widget_data)
                 widget = DraggableButton(props)
                 container.mount(widget)
+            elif widget_data["type"] == "Checkbox":
+                props = CheckboxProperties(**widget_data)
+                widget = DraggableCheckbox(props)
+                container.mount(widget)
+            elif widget_data["type"] == "Container":
+                children = widget_data.get("children", [])
+                del widget_data["children"]
+                props = ContainerProperties(**widget_data)
+                widget = DraggableContainer(props)
+                container.mount(widget)
+                self.load_widgets(children, widget)
             elif widget_data["type"] == "DataTable":
                 props = DataTableProperties(**widget_data)
                 widget = DraggableDataTable(props)
@@ -117,13 +131,6 @@ class PanelEditor(App):
                 props = TreeProperties(**widget_data)
                 widget = DraggableTree(props)
                 container.mount(widget)
-            elif widget_data["type"] == "Container":
-                children = widget_data.get("children", [])
-                del widget_data["children"]
-                props = ContainerProperties(**widget_data)
-                widget = DraggableContainer(props)
-                container.mount(widget)
-                self.load_widgets(children, widget)
 
     def action_load_panel(self) -> None:
         with open(self.filename, "r") as f:
@@ -148,14 +155,9 @@ class PanelEditor(App):
                 return widget
             if widget.props.type == "Container":
                 for child in widget.children:
-                    if child.props.name == f"{widget.props.name}.{name}":
+                    if child.props.name == f"{name}":
                         return child
         return None
-
-    def heartbeat(self) -> None:
-        # Update widgets here
-        for widget in self.container.children:
-            widget.update()
 
     def action_remove_all_widgets(self) -> None:
         for widget in self.container.query("*"):
@@ -173,9 +175,6 @@ class PanelEditor(App):
                 self.selected_widget = widget
             event.prevent_default()
 
-
-    def on_input_changed(self, event: Input.Changed) -> None:
-        pass
 
     def to_back(self, widget) -> None:
         """Move the specified widget to the back of the container's children."""

@@ -5,111 +5,7 @@ from textual.screen import ModalScreen
 from textual.app import ComposeResult
 
 class PropertiesSheet(ModalScreen):    
-    CSS = """
-    PropertiesSheet {
-        align: center middle;
-        background: rgba(0, 0, 0, 0.5);
-    }
-    
-    #property_dialog {
-        width: 60;
-        height: auto;
-        max-height: 30;
-        border: solid $primary;
-        background: $surface;
-        padding: 1;
-    }
-    
-    #property_content {
-        height: auto;
-        max-height: 20;
-        overflow-y: auto;
-        scrollbar-background: $surface;
-        scrollbar-color: $primary;
-        padding: 1 2;
-    }
-    
-    #property_title {
-        width: 100%;
-        height: 1;
-        text-align: center;
-        text-style: bold;
-        color: $accent;
-        margin: 0 0 0 0;
-        padding: 0;
-    }
-    
-    .property-row {
-        margin: 0 0 0 0;
-        width: 100%;
-        height: auto;
-    }
-    
-    .property-label {
-        width: 25%;
-        height: 3;
-        text-style: bold;
-        padding: 0 0 0 0;
-        text-align: right;
-        content-align: center middle;
-    }
-    
-    .property-textarea {
-        width: 75%;
-        height: 3;
-        background: $surface;
-        border: solid $primary;
-        padding: 0;
-        margin: 0;
-    }
-
-    .property-input {
-        width: 75%;
-        height: 3;
-        background: $surface;
-        border: solid $primary;
-        padding: 0;
-        margin: 0;
-    }
-
-    .property-textarea-command {
-        width: 75%;
-        height: 6;
-        background: $surface;
-        border: solid $primary;
-        padding: 0;
-        margin: 0;
-    }
-    
-    .readonly-field {
-        color: $text-muted;
-        background: $surface-lighten-1;
-        content-align: left middle;
-    }
-    
-    .readonly-field:disabled {
-        color: $text-muted;
-        background: $surface-lighten-2;
-        border: solid $primary 30%;
-    }
-    
-    #property_buttons {
-        height: 3;
-        width: 100%;
-        content-align: center middle;
-        padding: 2;
-        margin: 1 0 0 0;
-        padding: 0;
-        margin: 0;
-        align:center middle;
-    }
-    Button {
-        min-width: 8;
-        height: 3;
-        padding: 0 1;
-        margin: 0;
-    }
-    """
+    CSS_PATH = "css/properties_sheet.css"
     
     def __init__(self, widget_to_edit, title: str):
         super().__init__()
@@ -181,7 +77,9 @@ class PropertiesSheet(ModalScreen):
                 if field.type == int:
                     result[field.name] = int(input_widget.value)
                 elif field.type == str:
-                        result[field.name] = input_widget.value
+                    result[field.name] = input_widget.value
+                elif field.type == bool:
+                    result[field.name] = bool(input_widget.value)
                 elif field.type in [code, text]:
                     result[field.name] = input_widget.text
                 else:

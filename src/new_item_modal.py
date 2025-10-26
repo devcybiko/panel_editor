@@ -6,49 +6,7 @@ from textual.app import ComposeResult
 
 
 class NewItemModal(ModalScreen):    
-    CSS = """
-    NewItemModal {
-        align: center middle;
-        background: rgba(0, 0, 0, 0.5);
-    }
-    
-    #new_item_dialog {
-        grid-size: 1;
-        grid-gutter: 1;
-        grid-rows: auto 1fr;
-        padding: 1;
-        width: 40;
-        height: 15;
-        border: solid $primary;
-        background: $surface;
-    }
-    
-    #new_item_title {
-        width: 100%;
-        text-align: center;
-        text-style: bold;
-        color: $accent;
-        margin-bottom: 1;
-    }
-    
-    OptionList {
-        width: 100%;
-        height: 100%;
-        border: none;
-        background: $surface;
-    }
-    
-    OptionList > .option-list--option {
-        background: $surface;
-        border: none;
-    }
-    
-    OptionList > .option-list--option-highlighted {
-        background: $accent;
-        color: $text;
-        border: none;
-    }
-    """
+    CSS_PATH = "css/new_item_modal.css"
     
     def compose(self) -> ComposeResult:
         yield Container(
@@ -56,6 +14,7 @@ class NewItemModal(ModalScreen):
             OptionList(
                 Option("Button", id="button"),
                 Option("Data Table", id="datatable"),
+                Option("Checkbox", id="checkbox"),
                 Option("Container", id="container"),
                 Option("Label", id="label"),
                 Option("Text Area", id="textarea"),

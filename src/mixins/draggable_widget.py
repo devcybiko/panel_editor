@@ -140,6 +140,10 @@ class DraggableWidget:
                 self.show_properties_sheet()
             event.prevent_default()
 
+    async def on_mouse_down(self, event: MouseDown) -> None:
+        if event.button == 3:
+            event.prevent_default()
+
     def on_mouse_move(self, event: MouseMove) -> None:
         if event.button == 3:
             if self.app.panel.selected_widget != self:
@@ -155,6 +159,10 @@ class DraggableWidget:
             if self.app.panel.selected_widget != self:
                 return
             self.start_dragging(event)
+            event.prevent_default()
+
+    def on_click(self, event: MouseDown) -> None:
+        if event.button == 3:
             event.prevent_default()
 
     def find_widget(self, name: str) -> 'DraggableWidget | None':

@@ -18,32 +18,52 @@ class TextAreaProperties:
     placeholder: str = "placeholder"
     backing_file: str = ""
     readonly: bool = False
+    soft_wrap: bool = False
+    language: str = "python"
+    show_line_numbers: bool = False
 
 class DraggableTextArea(DraggableWidget, PropertiesWidget, FilebackedWidget, TextArea):    
     def __init__(self, props: TextAreaProperties = None, *args, **kwargs):
         if props is None:
             props = TextAreaProperties()
-        TextArea.__init__(self, classes="draggable-textarea", show_line_numbers=False, *args, **kwargs)
+        TextArea.__init__(self, classes="draggable-textarea", *args, **kwargs)
         PropertiesWidget.__init__(self, props)
         DraggableWidget.__init__(self)
         FilebackedWidget.__init__(self)
+        self.language = props.language
         self.update()
     
     def on_text_area_changed(self, event: TextArea.Changed) -> None:
         """Handle when the textarea content changes"""
         self.props.value = self.text
+        pass
     
+    def _set_code_editor(self, props=None):
+        if not props:
+            props = self.props
+        # self.language = props.language
+        self.soft_wrap = props.soft_wrap
+        self.tab_behavior = "indent"
+        self.read_only = props.readonly
+        self.show_cursor = True
+        self.show_line_numbers = props.show_line_numbers
+        self.disabled = False
+        self.tooltip = None
+        self.compact = False
+        self.highlight_cursor_line = True
+        self.placeholder = props.placeholder
+
+
     def update(self, props=None):
         super().update(props)
+        if self.text != self.props.value:
+            self.text = self.props.value
         self.border_title = self.props.name
         self.backingfile_update()
-        if self.last_value == self.props.value:
-            return
-        self.last_value = self.props.value
-        self.text = self.props.value
+        self._set_code_editor(self.props)
+        pass
 
     def _find_in_rows(self, lines, row, col, pattern, regex):
-        self.app.notify(f"Searching for pattern '{pattern}' at {row, col}", severity="info")
         for line in lines[row:]:
             if regex:
                 match = re.search(pattern, line[col:])
@@ -68,18 +88,14 @@ class DraggableTextArea(DraggableWidget, PropertiesWidget, FilebackedWidget, Tex
             pattern = pattern.lower()
         lines = content.splitlines()
         row, col = self.cursor_location
-        self.app.notify(f"cURSOR= {row, col}", severity="info")
         col += 1
         row, col = self._find_in_rows(lines, row, col, pattern, regex)
         if row < len(lines):
-            self.app.notify(f"Pattern found {row, col}", severity="info")
             return (row, col)
-        self.app.notify("Reached end of document, continuing search from top.", severity="info")
         row = 0
         col = 0
         row, col = self._find_in_rows(lines, row, col, pattern, regex)
         if row < len(lines):
-            self.app.notify(f"^ Pattern found {row,col}", severity="info")
             return (row, col)
         self.app.notify("Pattern not found.", severity="warning")
         return (row, col)
