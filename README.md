@@ -112,4 +112,3 @@ An application generator reminiscent of Visual Basic, but for Textual User Inter
 
 - There is no "undo" key in the pre-release version.
 - So, save early and save often.
-- bump
