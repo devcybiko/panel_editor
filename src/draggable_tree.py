@@ -55,7 +55,7 @@ class DraggableTree(DraggableWidget, PropertiesWidget, FilebackedWidget, Tree):
             if type(element) not in [dict, list]:
                 child = node.add_leaf(child_name)
             else:
-                child_name = "(" + element.get(key_name, f"Child {index}") + ")"
+                child_name = "child:" + element.get(key_name, f"child: {index}")
                 child = node.add(child_name)
                 self.add_json_to_tree(child, element)
 

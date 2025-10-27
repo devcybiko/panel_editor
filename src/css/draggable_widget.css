@@ -48,9 +48,23 @@ Vertical {
     padding: 1;
 }
 
-.draggable-button,
-.draggable-datatable,
-.draggable-input,
+.draggable-button {
+    position: absolute;
+    background: $surface;
+    border: solid $primary;
+    padding: 0;
+    margin: 0;
+}
+
+.draggable-datatable {
+    position: absolute;
+    background: $surface;
+    border: solid $primary;
+    padding: 0;
+    margin: 0;
+}
+
+
 .draggable-textarea {
     position: absolute;
     background: $surface;
@@ -112,42 +126,12 @@ Vertical {
     width: 100vw;
 }
 
-.draggable-button:focus,
-.draggable-input:focus,
 .draggable-textarea:focus {
     border: solid $accent;
 }
 
-/* Clean up all Input widgets */
-Input {
-    border: none;
-    background: $surface;
-    height: 3;
-    padding: 0 1;
-    margin: 0;
-}
-
-/* Style the draggable inputs specifically */
-.draggable-input {
-    border: solid $primary;
-    background: $surface;
-    padding: 0 1;
-    margin: 0;
-}
-
-/* Style the draggable textarea specifically */
-.draggable-textarea {
-    border: solid $primary;
-    background: $surface;
-    padding: 1;
-    margin: 0;
-}
-
-/* Remove any cursor artifacts */
-Input > .input--cursor {
-    color: $text;
-    background: transparent;
-    text-style: none;
+.draggable-textarea:focus {
+    border: solid $accent;
 }
 
 #main_content {
@@ -165,3 +149,5 @@ Input > .input--cursor {
     margin: 0;
     padding: 1;
 }
+
+
