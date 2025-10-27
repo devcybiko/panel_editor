@@ -1,0 +1,8 @@
+.draggable-label {
+    position: absolute;
+    background: $surface;
+    border: none;
+    height: 1;
+    padding: 0;
+    margin: 0;
+}

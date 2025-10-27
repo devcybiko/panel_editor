@@ -14,7 +14,7 @@ class InputProperties:
     height: int = 3
     placeholder: str = "placeholder"
 
-class DraggableInput(DraggableWidget, PropertiesWidget, Input):    
+class DraggableInput(DraggableWidget, PropertiesWidget, Input):
     def __init__(self, props: InputProperties = None, *args, **kwargs):
         if props is None:
             props = InputProperties()

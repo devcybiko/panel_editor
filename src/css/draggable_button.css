@@ -1,0 +1,14 @@
+.draggable-button {
+    position: absolute;
+    background: $surface;
+    border: solid $primary;
+    margin: 0;
+    min-width: 3;
+    height: 3;
+    padding: 0 2;
+}
+
+.draggable-button:hover {
+    border: solid $accent;
+}
+

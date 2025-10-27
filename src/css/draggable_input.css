@@ -1,0 +1,21 @@
+/* INPUT CURSOR STYLE */
+/* Clean up all Input widgets */
+Input {
+    border: none;
+    background: $surface;
+    height: 3;
+    padding: 0 1;
+    margin: 0;
+} 
+
+.draggable-input {
+    position: absolute;
+    background: $surface;
+    border: solid $primary;
+    padding: 0;
+    margin: 0;
+}
+
+.draggable-input:focus {
+    border: solid $accent;
+}

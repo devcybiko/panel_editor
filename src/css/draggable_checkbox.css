@@ -1,0 +1,30 @@
+.draggable-checkbox-border {
+    position: absolute;
+    padding: 0;
+    margin: 0;
+    height: 3;
+    border: solid $primary;
+    content-align: left middle;
+}
+
+.draggable-checkbox-no-border {
+    position: absolute;
+    background: $surface;
+    color: $text;
+    padding: 0;
+    margin: 0;
+    height: 3;
+    border: none;
+    content-align: left middle;
+}
+
+.draggable-checkbox-border:focus,
+.draggable-checkbox-border:hover {
+    border: solid $accent;
+}
+
+.draggable-checkbox-no-border:focus,
+.draggable-checkbox-no-border:hover {
+    background: $surface;
+    color: $text;
+}

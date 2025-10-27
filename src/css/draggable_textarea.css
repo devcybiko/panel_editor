@@ -1,0 +1,15 @@
+.draggable-textarea {
+    position: absolute;
+    background: $surface;
+    border: solid $primary;
+    padding: 0;
+    margin: 0;
+}
+
+.draggable-textarea:focus {
+    border: solid $accent;
+}
+
+.draggable-textarea:focus {
+    border: solid $accent;
+}

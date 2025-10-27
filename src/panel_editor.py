@@ -25,8 +25,16 @@ class PanelEditor(App):
         ("c", "clear_buttons", "Clear All"),
         ("q", "quit", "Quit"),
     ]
-    CSS_PATH = "./css/draggable_widget.css"
-
+    CSS_PATH = [
+        "css/draggable_button.css",
+        "css/draggable_checkbox.css",
+        "css/draggable_datatable.css",
+        "css/draggable_input.css",
+        "css/draggable_label.css",
+        "css/draggable_textarea.css",
+        "css/draggable_tree.css",
+        "css/panel_editor.css",
+    ]
     def __init__(self, filename="a.json"):
         super().__init__()
         self.filename = filename
