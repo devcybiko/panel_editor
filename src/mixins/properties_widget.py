@@ -72,6 +72,7 @@ class PropertiesWidget:
         self.refresh()
 
     def show_properties_sheet(self) -> None:
+        self._debug(f"Showing properties sheet for {self.props.name} ({self.props.type})")
         self.app.push_screen(PropertiesSheet(self, f"{self.type} Properties"), self.update)
     
     def copy_props(self):

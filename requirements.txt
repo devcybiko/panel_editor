@@ -4,3 +4,4 @@ textual-web
 pyperclip
 munch
 textual[syntax]
+json5

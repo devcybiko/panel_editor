@@ -2,7 +2,9 @@ import json
 import sys
 from textual.app import App, ComposeResult
 from textual.containers import Container
-from textual.widgets import Button, Footer, Input
+from textual.widget import Widget
+from textual.widgets import Button, Footer, Input, RadioSet, RadioButton
+from rich.text import Text
 from textual.reactive import reactive
 from textual.events import MouseDown
 from draggable_container import ContainerProperties, DraggableContainer
@@ -15,9 +17,17 @@ from draggable_textarea import DraggableTextArea, TextAreaProperties
 from mixins.draggable_widget import DraggableWidget
 from draggable_label import DraggableLabel, LabelProperties
 from draggable_tree import DraggableTree, TreeProperties
+from draggable_radioset import DraggableRadioSet, RadioSetProperties
+from mixins.logging_widget import LoggingWidget
+from mixins.menu_widget import MenuWidget
 
+## GLS - HACK - monkey patch notify to add timeout default
+original_notify = Widget.notify
+def global_notify(self, message, timeout=5, **kwargs):
+    return original_notify(self, message, timeout=timeout, **kwargs)
+Widget.notify = global_notify
 
-class PanelEditor(App):    
+class PanelEditor(LoggingWidget, MenuWidget, App):    
     BINDINGS = [
         ("ctrl+n", "show_new_item_modal", "New Item"),
         ("ctrl+s", "save_panel", "Save"),
@@ -31,6 +41,7 @@ class PanelEditor(App):
         "css/draggable_datatable.css",
         "css/draggable_input.css",
         "css/draggable_label.css",
+        "css/draggable_radioset.css",
         "css/draggable_textarea.css",
         "css/draggable_tree.css",
         "css/panel_editor.css",
@@ -44,6 +55,7 @@ class PanelEditor(App):
         yield Footer()
 
     def on_mount(self) -> None:
+        self.app.debug_mode = True
         self.container = self.query_one("#widget_container", Container)
         self.container.props = ContainerProperties(name="Main Container", type="Container", row=0, col=0, width=100, height=100)
         self.app.panel = self
@@ -70,16 +82,21 @@ class PanelEditor(App):
                 new_widget = DraggableLabel()
             elif selection == "input":
                 new_widget = DraggableInput()
+            elif selection == "radioset":
+                new_widget = DraggableRadioSet()
             elif selection == "textarea":
                 new_widget = DraggableTextArea()
             elif selection == "tree":
                 new_widget = DraggableTree()
             else:
+                self._warning(f"Unknown widget type: {selection}")
                 return
             if self.container.children:
-                self.container.mount(new_widget, before=self.container.children[0])
+                self.container.mount(new_widget, before=self.container.children[-1])
             else:
                 self.container.mount(new_widget)
+        if self.screen_stack and isinstance(self.screen_stack[-1], NewItemModal):
+            return  # Modal is already open, do nothing
         self.push_screen(NewItemModal(), handle_selection)
 
     def container_to_dict(self, container) -> None:
@@ -100,7 +117,7 @@ class PanelEditor(App):
         with open(self.filename, "w") as f:
             json.dump(widgets_data, f, indent=2)
             f.flush()  # Ensure data is written to disk
-        self.notify(f"File saved to {self.filename}", severity="information")
+        self._info(f"File saved to {self.filename}")
 
     def load_widgets(self, widgets_data, container) -> None:
         for widget_data in widgets_data:
@@ -131,6 +148,9 @@ class PanelEditor(App):
                 props = LabelProperties(**widget_data)
                 widget = DraggableLabel(props)
                 container.mount(widget)
+            elif widget_data["type"] == "RadioSet":
+                props = RadioSetProperties(**widget_data)
+                widget = DraggableRadioSet(props)
             elif widget_data["type"] == "TextArea":
                 props = TextAreaProperties(**widget_data)
                 widget = DraggableTextArea(props)
@@ -146,7 +166,7 @@ class PanelEditor(App):
         self.action_remove_all_widgets()
         widgets = panel_data.get("children", [])
         self.load_widgets(widgets, self.container)
-        self.notify(f"Loaded {len(widgets)} widgets from {self.filename}", severity="information")
+        self._info(f"Loaded {len(widgets)} widgets from {self.filename}")
 
     def get_all_widgets(self) -> list:
         all_widgets = []
@@ -171,28 +191,14 @@ class PanelEditor(App):
         for widget in self.container.query("*"):
             if widget.props: widget.remove()
     
-    def on_mouse_down(self, event: MouseDown) -> None:
-        if event.button == 3:  # Right click
-            result = self.get_widget_at(*event.screen_offset)
-            if not result: return
-            widget, region = result
-            if not widget: return
-            if widget.id == "widget_container":
-                self.action_show_new_item_modal()
-            else:
-                self.selected_widget = widget
-            event.prevent_default()
-
+    async def on_menu_click(self, event: MouseDown) -> None:
+        self.action_show_new_item_modal()
 
     def to_back(self, widget) -> None:
         """Move the specified widget to the back of the container's children."""
         if widget in self.container.children:
             self.container.remove(widget)
             self.container.mount(widget, before=self.container.children[0])
-
-
-
-
 
 def parse_args():
     import argparse

@@ -2,6 +2,7 @@ from dataclasses import dataclass
 import json
 from munch import DefaultMunch
 from textual.widgets import Button
+from textual.events import Click
 from mixins.draggable_widget import DraggableWidget
 from mixins.properties_widget import PropertiesWidget, text, code
 import os
@@ -63,7 +64,6 @@ class DraggableButton(DraggableWidget, PropertiesWidget, Button):
                     widget.update()
             else:
                 self.app.notify(f"Widget '{self.props.target}' not found", severity="error")
-                # self.app.notify(f"Command Output:\n{output}", severity="information")
 
     def _write_shell_script(self) -> None:
         with open('./tmp/a.sh', 'w') as f:
@@ -86,17 +86,12 @@ class DraggableButton(DraggableWidget, PropertiesWidget, Button):
                 widget.update()
             else:
                 self.app.notify(f"Widget '{self.props.target}' not found", severity="error")
-                # self.app.notify(f"Command Output:\n{output}", severity="information")
         with open('./tmp/a.err', 'r') as f:
             output = f.read().strip()
             if output:
                 self.app.notify(f"Command Error Output:\n{output}", severity="error")
 
-    def on_click(self, event: "Click") -> None:
-        if event.button == 3:
-            event.prevent_default()
-            return
-
+    def on_button_pressed(self, event: Button.Pressed) -> None:
         if self.props.command and not self.props.python:
             self.app.notify(f"Executing command: {self.props.command}", severity="information")
             self._write_shell_script()
@@ -104,6 +99,3 @@ class DraggableButton(DraggableWidget, PropertiesWidget, Button):
         elif self.props.command and self.props.python:
             context = self._create_context()
             self._python_eval(context)
-
-    def on_button_pressed(self, event: Button.Pressed) -> None:
-        pass

@@ -16,9 +16,10 @@ class NewItemModal(ModalScreen):
                 Option("Data Table", id="datatable"),
                 Option("Checkbox", id="checkbox"),
                 Option("Container", id="container"),
+                Option("Input", id="input"),
                 Option("Label", id="label"),
+                Option("RadioSet", id="radioset"),
                 Option("Text Area", id="textarea"),
-                Option("Text Input", id="input"),
                 Option("Tree", id="tree"),
                 id="option_list"
             ),

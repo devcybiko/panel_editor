@@ -1,6 +1,6 @@
 .draggable-tree {
     position: absolute;
     border: solid $primary;
-    border-title-align: center;
+    /* border-title-align: center; */
     padding: 1;
 }

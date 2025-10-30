@@ -4,7 +4,9 @@ from textual.widgets import Button, Label, TextArea, Checkbox, Input
 from textual.screen import ModalScreen
 from textual.app import ComposeResult
 
-class PropertiesSheet(ModalScreen):    
+from mixins.menu_widget import MenuWidget
+
+class PropertiesSheet(MenuWidget, ModalScreen):    
     CSS_PATH = "css/properties_sheet.css"
     
     def __init__(self, widget_to_edit, title: str):
@@ -31,7 +33,7 @@ class PropertiesSheet(ModalScreen):
                 input_widget = TextArea(classes="property-textarea-command", id=f"{field.name}_input")
                 input_widget.text = str(field_value)
             elif field.type == code:
-                if props.python:
+                if hasattr(props, "python") and props.python:
                     language = "python"
                 else:
                     language = "bash"

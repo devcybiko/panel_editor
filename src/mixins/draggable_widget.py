@@ -1,10 +1,14 @@
-from textual.events import MouseDown, MouseUp, MouseMove
+from textual.events import MouseDown, MouseUp, MouseMove, Click
 
+from mixins.logging_widget import LoggingWidget
+from mixins.menu_widget import MenuWidget
 from widget_factory import WidgetFactory
 
 RESIZING_BORDER_SIZE = 4
+X_PADDING = 2
+Y_PADDING = 2
 
-class DraggableWidget:    
+class DraggableWidget(LoggingWidget, MenuWidget):    
     def __init__(self, *args, **kwargs):
         self.is_dragging = False
         self.is_resizing = False
@@ -16,8 +20,34 @@ class DraggableWidget:
         self.initial_width = 0
         self.initial_height = 0
     
-    def start_dragging(self, event: MouseDown) -> None:
+    @property
+    def x(self) -> int:
+        return int(self.styles.offset[0].value)
+
+    @property
+    def y(self) -> int:
+        return int(self.styles.offset[1].value)
+    
+    @property
+    def abs_x(self) -> int:
+        return self.x + self.parent.props.col + X_PADDING
+
+    @property
+    def abs_y(self) -> int:
+        return self.y + self.parent.props.row + Y_PADDING
+
+    @property
+    def row(self) -> int:
+        return self.y
+
+    @property
+    def col(self) -> int:
+        return self.x
+
+    async def start_dragging(self, event: MouseDown) -> None:
+        self = await self._move_to_container(self.app.container, event)
         self.is_dragging = True
+        self.capture_mouse()
         
         # Store the initial mouse position and current widget offset
         self.drag_start_x = event.screen_x
@@ -29,83 +59,73 @@ class DraggableWidget:
         if self.is_sizable and self.hit_x > (self.props.width - RESIZING_BORDER_SIZE) and self.hit_y > (self.props.height - RESIZING_BORDER_SIZE):
             self.is_resizing = True
 
-        # Get current offset (if any)
-        current_offset = getattr(self.styles, 'offset', None)
-        if current_offset is not None:
-            # Handle ScalarOffset object - extract numeric values
-            try:
-                self.initial_offset_x = float(current_offset[0].value) if hasattr(current_offset[0], 'value') else float(current_offset[0])
-                self.initial_offset_y = float(current_offset[1].value) if hasattr(current_offset[1], 'value') else float(current_offset[1])
-            except (AttributeError, TypeError, IndexError):
-                self.initial_offset_x = 0
-                self.initial_offset_y = 0
-        else:
-            self.initial_offset_x = 0
-            self.initial_offset_y = 0
-        
-        self.capture_mouse()
-        event.prevent_default()
-    
+        self.initial_offset_x = self.x
+        self.initial_offset_y = self.y
+
+    async def to_front(self):
+        self.parent.move_child(self, before=-1)
+
+    async def to_back(self):
+        self.parent.move_child(self, before=0)
+
     async def stop_dragging(self, event: MouseUp) -> None:
         if self.is_dragging:
             self.is_dragging = False
             self.is_resizing = False
             self.release_mouse()
-            
-            # Check for drop into container or removal from current container
             await self.handle_drop(event)
-            
-            event.prevent_default()
-    
+                
     async def _move_to_container(self, container, event: MouseUp) -> None:
-        await self.remove()
-        container.refresh()
-        new_widget = WidgetFactory.from_properties(self.props)
-        await container.mount(new_widget)
-
+        if self.props.type == 'Container':
+            return self
+        if self.parent == container:
+            return self  # No change needed
         if container == self.app.container:
-            new_widget.props.row = event.screen_y - self.hit_y + 2
-            new_widget.props.col = event.screen_x - self.hit_x + 2
-            new_widget.update()
-            self.app.notify(f"'{self.props.name}' was added to APP.CONTAINER", severity="information")
+            self.props.row = self.abs_y
+            self.props.col = self.abs_x
         else:
-            new_widget.props.row = event.screen_y - self.hit_y - container.props.row - 2
-            new_widget.props.col = event.screen_x - self.hit_x - container.props.col - 2
-            new_widget.update()
-            self.app.notify(f"'{self.props.name}' was added to '{container.props.name}'", severity="information")
+            self.props.row = self.abs_y - container.props.row - Y_PADDING * 2
+            self.props.col = self.abs_x - container.props.col - X_PADDING * 2
+        new_widget = WidgetFactory.from_properties(self.props)
+        await self.remove()
+        await container.mount(new_widget, before=container.children[-1])
+        await self.to_front()
+        container.refresh()
+        return new_widget
 
-    
+
     async def handle_drop(self, event: MouseUp) -> None:
         """Check if widget should be added to or removed from containers"""
-        if self.props.type == 'Container': return
-        container = self.get_container_at_position(event.screen_x, event.screen_y)
-        if container == self.parent: 
+        if self.props.type == 'Container':
+            # containers cannot be nested
             return
-        if container is None:
-            if self.parent == self.app.container:
-                return
-            await self._move_to_container(self.app.container, event)
+        if self.parent == self.app.container:
+            # we're dropping from app container into draggable_container
+            # use upper-left corner of widget
+            container = self.get_container_at_position(self.abs_x, self.abs_y)
+            if container != None:
+                await self._move_to_container(container, event)
         else:
-            await self._move_to_container(container, event)
+            # removing from a container - alows drop back onto app container (never drop into another container)
+            await self._move_to_container(self.app.container, event)
 
     def get_container_at_position(self, x, y):
         containers = self.app.query(".draggable-container")
         for container in containers:
             if container == self: continue
-            offset = container.styles.offset
-            cx = offset[0].value
-            cy = offset[1].value
+            cx = container.x
+            cy = container.y
             cw = container.props.width
             ch = container.props.height
 
             # Check if position is inside container
-            if (cx <= x <= cx + cw and
-                cy <= y <= cy + ch):
+            if (cx + 2 <= x <= cx + cw - 2 and
+                cy + 2 <= y <= cy + ch - 2):
                 return container
                 
         return None
     
-    def handle_drag_move(self, event: MouseMove) -> None:
+    async def handle_drag_move(self, event: MouseMove) -> None:
         if self.is_dragging:
             # Calculate how far the mouse has moved from the start
             delta_x = event.screen_x - self.drag_start_x
@@ -129,41 +149,28 @@ class DraggableWidget:
             self.update()
             event.prevent_default()
 
-    async def on_mouse_up(self, event: MouseUp) -> None:
-        if event.button == 3:
-            if self.app.panel.selected_widget != self:
-                return
-            if self.is_dragging:
-                await self.stop_dragging(event)
-                self.app.panel.selected_widget = None
-            else:
-                self.show_properties_sheet()
-            event.prevent_default()
+    async def on_menu_down(self, event: MouseDown) -> None:
+        await self.to_front()
 
     async def on_mouse_down(self, event: MouseDown) -> None:
-        if event.button == 3:
-            event.prevent_default()
-
-    def on_mouse_move(self, event: MouseMove) -> None:
-        if event.button == 3:
-            if self.app.panel.selected_widget != self:
-                return
-            if self.is_dragging:
-                self.handle_drag_move(event)
+        if event.button == 1 and event.shift:
+            index = self.parent.children.index(self)
+            if index == 0:
+                await self.to_front()
             else:
-                self.start_dragging(event)
-            event.prevent_default()
+                await self.to_back()
 
-    def on_mouse_down(self, event: MouseDown) -> None:
-        if event.button == 3:
-            if self.app.panel.selected_widget != self:
-                return
-            self.start_dragging(event)
-            event.prevent_default()
+    async def on_menu_up(self, event: MouseUp) -> None:
+        if self.is_dragging:
+            await self.stop_dragging(event)
+        else:
+            self.show_properties_sheet()
 
-    def on_click(self, event: MouseDown) -> None:
-        if event.button == 3:
-            event.prevent_default()
+    async def on_menu_move(self, event: MouseMove) -> None:
+        if self.is_dragging:
+            await self.handle_drag_move(event)
+        else:
+            await self.start_dragging(event)
 
     def find_widget(self, name: str) -> 'DraggableWidget | None':
         return self.app.panel.find_widget(name)

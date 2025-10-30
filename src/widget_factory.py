@@ -1,6 +1,5 @@
 from dataclasses import dataclass
 
-
 class WidgetFactory:
     @staticmethod
     def from_properties(props: dataclass) -> any:
@@ -12,6 +11,7 @@ class WidgetFactory:
         from draggable_textarea import DraggableTextArea
         from draggable_datatable import DraggableDataTable
         from draggable_tree import DraggableTree
+        from draggable_radioset import DraggableRadioSet
 
         """Create a widget instance based on its properties type"""
         if props.type == "Button":
@@ -26,6 +26,8 @@ class WidgetFactory:
             return DraggableInput(props)
         elif props.type == "Label":
             return DraggableLabel(props)
+        elif props.type == "RadioSet":
+            return DraggableRadioSet(props)
         elif props.type == "TextArea":
             return DraggableTextArea(props)
         elif props.type == "Tree":

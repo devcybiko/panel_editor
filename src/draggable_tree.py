@@ -37,9 +37,6 @@ class DraggableTree(DraggableWidget, PropertiesWidget, FilebackedWidget, Tree):
         self.update()
         self.last_load_time = 0
         self.last_value = ""
-        # root_node = self.root
-        # child1 = root_node.add("Child 1")
-        # subchild = child1.add("Subchild 1.1")
 
     def _expand_all_nodes(self, node):
         node.expand()
@@ -103,7 +100,6 @@ class DraggableTree(DraggableWidget, PropertiesWidget, FilebackedWidget, Tree):
             text = str(node.label).split(":",1)[1] if ":" in str(node.label) else str(node.label)
             text = text.strip()
             pyperclip.copy(text)
-            self.app.notify(f"Copied: {text}", severity="information")
             if self.props.target:
                 widget = self.app.panel.find_widget(self.props.target)
                 if widget and hasattr(widget.props, 'value'):

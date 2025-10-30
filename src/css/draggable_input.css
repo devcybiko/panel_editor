@@ -1,18 +1,19 @@
 /* INPUT CURSOR STYLE */
 /* Clean up all Input widgets */
-Input {
+/* Input {
     border: none;
     background: $surface;
     height: 3;
     padding: 0 1;
     margin: 0;
-} 
+}  */
 
 .draggable-input {
     position: absolute;
-    background: $surface;
     border: solid $primary;
-    padding: 0;
+    background: $surface;
+    height: 3;
+    padding: 0 1;
     margin: 0;
 }
 

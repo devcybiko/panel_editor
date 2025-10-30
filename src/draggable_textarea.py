@@ -41,7 +41,6 @@ class DraggableTextArea(DraggableWidget, PropertiesWidget, FilebackedWidget, Tex
     def _set_code_editor(self, props=None):
         if not props:
             props = self.props
-        # self.language = props.language
         self.soft_wrap = props.soft_wrap
         self.tab_behavior = "indent"
         self.read_only = props.readonly

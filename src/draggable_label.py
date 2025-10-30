@@ -2,8 +2,6 @@ from dataclasses import dataclass
 from textual.widgets import Label
 from mixins.draggable_widget import DraggableWidget
 from mixins.properties_widget import PropertiesWidget
-import os
-
 
 @dataclass
 class LabelProperties:
