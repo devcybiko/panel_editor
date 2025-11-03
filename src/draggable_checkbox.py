@@ -16,7 +16,7 @@ class CheckboxProperties:
     width: int = 5
     height: int = 3
     border: bool = False
-    variable_width: bool = True
+    auto_size: bool = True
 
 class DraggableCheckbox(DraggableWidget, PropertiesWidget, Checkbox):
     def __init__(self, props: CheckboxProperties = None, *args, **kwargs):
@@ -26,7 +26,8 @@ class DraggableCheckbox(DraggableWidget, PropertiesWidget, Checkbox):
         PropertiesWidget.__init__(self, props)
         DraggableWidget.__init__(self)
         self.is_sizable = False
-        self.props.width = len(self.props.label) + 7
+        self.X_PADDING = 2
+        self.Y_PADDING = 1
         self.update()
 
     def on_checkbox_changed(self, event: Checkbox.Changed) -> None:
@@ -36,8 +37,6 @@ class DraggableCheckbox(DraggableWidget, PropertiesWidget, Checkbox):
             self.props.value = self.props.false_value
 
     def update(self, props=None):
-        if self.props.variable_width:
-            self.props.width = len(self.props.label) + 7
         super().update(props)
         # Ensure checkbox state matches props.value
         if self.props.border:
@@ -46,4 +45,10 @@ class DraggableCheckbox(DraggableWidget, PropertiesWidget, Checkbox):
         else:
             if "draggable-checkbox-no-border" not in self.classes:
                 self.classes = "draggable-checkbox-no-border" # Removes border
-        pass
+        
+        if self.props.auto_size:
+            self.props.width = len(self.props.label) + 3 + self.X_PADDING * 2  # Padding and checkbox
+            self.props.height = 1 + self.Y_PADDING * 2  # Fixed height for checkbox
+            self.is_sizable = False
+        else:
+            self.is_sizable = True

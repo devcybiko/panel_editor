@@ -15,15 +15,18 @@ class RadioSetProperties:
     width: int = 35
     height: int = 10
     target: str = ""
+    auto_size: bool = True
 
 class DraggableRadioSet(DraggableWidget, PropertiesWidget, RadioSet):
     def __init__(self, props: RadioSetProperties = None, *args, **kwargs):
         if props is None:
             props = RadioSetProperties()
-        self.last_values = None
         RadioSet.__init__(self, classes="draggable-radioset", *args, **kwargs)
         PropertiesWidget.__init__(self, props)
         DraggableWidget.__init__(self)
+        self.last_values = None
+        self.X_PADDING = 2
+        self.Y_PADDING = 1
         super().update(props)
 
     def update(self, props=None):
@@ -34,14 +37,23 @@ class DraggableRadioSet(DraggableWidget, PropertiesWidget, RadioSet):
             for radio in self.children:
                 radio.remove()
             for value in self.props.values.split("\n"):
-                self.notify(f"Adding RadioButton with value: {value}")
                 radio = RadioButton(value)
                 self.mount(radio)
             self.last_values = self.props.values
             self.width = self.props.width
             self.height = self.props.height
             self.refresh()
-        pass
+        if self.props.auto_size:
+            # Adjust width based on longest value
+            max_length = max(len(value) for value in self.props.values.splitlines())
+            self.props.width = max_length + 3 + self.X_PADDING * 2  # Padding for radio button
+            self.props.height = len(self.props.values.splitlines()) + self.Y_PADDING * 2  # Padding for radio buttons
+            self.width = self.props.width
+            self.height = self.props.height
+            self.is_sizable = False
+            self.refresh()
+        else:
+            self.is_sizable = True
 
     def on_radio_button_changed(self, event: RadioButton.Changed) -> None:
         if event.value:

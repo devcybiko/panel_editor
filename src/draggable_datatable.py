@@ -40,6 +40,7 @@ class DraggableDataTable(DraggableWidget, PropertiesWidget, FilebackedWidget, Da
         if not self.props.value:
             self.clear(columns=True)
             return
+        self.last_value = self.props.value
         n_cols = 0
         i = 0
         reader = csv.reader(io.StringIO(self.props.value))

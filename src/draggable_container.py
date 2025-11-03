@@ -27,5 +27,7 @@ class DraggableContainer(DraggableWidget, PropertiesWidget, Container):
         
     def update(self, props=None):
         super().update(props)
+        for child in self.children:
+            child.update()
         self.border_title = self.props.label
     

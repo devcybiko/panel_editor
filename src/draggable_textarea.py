@@ -59,7 +59,7 @@ class DraggableTextArea(DraggableWidget, PropertiesWidget, FilebackedWidget, Tex
             self.text = self.props.value
         self.border_title = self.props.name
         self.backingfile_update()
-        self._set_code_editor(self.props)
+        # self._set_code_editor(self.props)
         pass
 
     def _find_in_rows(self, lines, row, col, pattern, regex):

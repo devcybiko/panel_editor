@@ -4,12 +4,12 @@ from mixins.logging_widget import LoggingWidget
 from mixins.menu_widget import MenuWidget
 from widget_factory import WidgetFactory
 
-RESIZING_BORDER_SIZE = 4
-X_PADDING = 2
-Y_PADDING = 2
 
 class DraggableWidget(LoggingWidget, MenuWidget):    
     def __init__(self, *args, **kwargs):
+        self.RESIZING_BORDER_SIZE = 4
+        self.X_PADDING = 2
+        self.Y_PADDING = 2
         self.is_dragging = False
         self.is_resizing = False
         self.is_sizable = True
@@ -30,11 +30,11 @@ class DraggableWidget(LoggingWidget, MenuWidget):
     
     @property
     def abs_x(self) -> int:
-        return self.x + self.parent.props.col + X_PADDING
+        return self.x + self.parent.props.col + self.X_PADDING
 
     @property
     def abs_y(self) -> int:
-        return self.y + self.parent.props.row + Y_PADDING
+        return self.y + self.parent.props.row + self.Y_PADDING
 
     @property
     def row(self) -> int:
@@ -56,7 +56,7 @@ class DraggableWidget(LoggingWidget, MenuWidget):
         self.initial_height = self.props.height
         self.hit_x = event.screen_x - self.parent.props.col - self.props.col
         self.hit_y = event.screen_y - self.parent.props.row - self.props.row
-        if self.is_sizable and self.hit_x > (self.props.width - RESIZING_BORDER_SIZE) and self.hit_y > (self.props.height - RESIZING_BORDER_SIZE):
+        if self.is_sizable and self.hit_x > (self.props.width - self.RESIZING_BORDER_SIZE) and self.hit_y > (self.props.height - self.RESIZING_BORDER_SIZE):
             self.is_resizing = True
 
         self.initial_offset_x = self.x
@@ -84,13 +84,14 @@ class DraggableWidget(LoggingWidget, MenuWidget):
             self.props.row = self.abs_y
             self.props.col = self.abs_x
         else:
-            self.props.row = self.abs_y - container.props.row - Y_PADDING * 2
-            self.props.col = self.abs_x - container.props.col - X_PADDING * 2
+            self.props.row = self.abs_y - container.props.row - self.Y_PADDING * 2
+            self.props.col = self.abs_x - container.props.col - self.X_PADDING * 2
         new_widget = WidgetFactory.from_properties(self.props)
-        await self.remove()
-        await container.mount(new_widget, before=container.children[-1])
-        await self.to_front()
+        self.app.panel.remove_queue.append(self) ## remove this later
+        await container.mount(new_widget, before=-1)
+        # await new_widget.to_front()
         container.refresh()
+        new_widget.update()
         return new_widget
 
 
@@ -152,13 +153,22 @@ class DraggableWidget(LoggingWidget, MenuWidget):
     async def on_menu_down(self, event: MouseDown) -> None:
         await self.to_front()
 
+    def n_children(self) -> int:
+        return len(self.parent.children) - 2
+
+    def is_in_front(self) -> bool:
+        index = int(self.parent.children.index(self))
+        in_front = index == self.n_children()
+        return in_front
+
     async def on_mouse_down(self, event: MouseDown) -> None:
         if event.button == 1 and event.shift:
-            index = self.parent.children.index(self)
-            if index == 0:
-                await self.to_front()
-            else:
+            if self.is_in_front():
+                self.notify("Moving to back")
                 await self.to_back()
+            else:
+                self.notify("Moving to front")
+                await self.to_front()
 
     async def on_menu_up(self, event: MouseUp) -> None:
         if self.is_dragging:

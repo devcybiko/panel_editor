@@ -29,16 +29,7 @@
       "width": 11,
       "height": 3,
       "border": true,
-      "variable_width": true
-    },
-    {
-      "type": "Label",
-      "name": "_label",
-      "label": "New Label",
-      "row": 4,
-      "col": 6,
-      "width": 9,
-      "height": 1
+      "auto_size": true
     },
     {
       "type": "Input",
@@ -65,27 +56,12 @@
     {
       "type": "Input",
       "name": "selected",
-      "value": "children",
+      "value": "<empty>",
       "row": 24,
       "col": 94,
       "width": 40,
       "height": 3,
       "placeholder": "placeholder"
-    },
-    {
-      "type": "TextArea",
-      "name": "_a.jnk",
-      "value": "",
-      "row": 32,
-      "col": 80,
-      "width": 49,
-      "height": 17,
-      "placeholder": "placeholder",
-      "backing_file": "a.jnk",
-      "readonly": false,
-      "soft_wrap": false,
-      "language": "python",
-      "show_line_numbers": false
     },
     {
       "type": "DataTable",
@@ -110,65 +86,6 @@
       "col": 33,
       "width": 20,
       "height": 3
-    },
-    {
-      "type": "Container",
-      "name": "address",
-      "label": "Address",
-      "row": 1,
-      "col": 16,
-      "width": 61,
-      "height": 13,
-      "children": [
-        {
-          "type": "Input",
-          "name": "first_name",
-          "value": "Greg",
-          "row": 0,
-          "col": 8,
-          "width": 49,
-          "height": 3,
-          "placeholder": "first name"
-        },
-        {
-          "type": "Input",
-          "name": "last_name",
-          "value": "Smith",
-          "row": 3,
-          "col": 8,
-          "width": 48,
-          "height": 3,
-          "placeholder": "last name"
-        },
-        {
-          "type": "Input",
-          "name": "street",
-          "value": "13620 Cradle Hill Road",
-          "row": 6,
-          "col": 8,
-          "width": 49,
-          "height": 3,
-          "placeholder": "address"
-        },
-        {
-          "type": "Label",
-          "name": "_label",
-          "label": "First:",
-          "row": 1,
-          "col": 2,
-          "width": 6,
-          "height": 1
-        },
-        {
-          "type": "Label",
-          "name": "_label",
-          "label": "Street:",
-          "row": 7,
-          "col": 1,
-          "width": 7,
-          "height": 1
-        }
-      ]
     },
     {
       "type": "Button",
@@ -219,6 +136,55 @@
       "height": 3
     },
     {
+      "type": "Label",
+      "name": "_",
+      "label": "Selected:",
+      "row": 25,
+      "col": 84,
+      "width": 9,
+      "height": 1
+    },
+    {
+      "type": "Checkbox",
+      "name": "t",
+      "label": "time-ordered",
+      "value": "-t",
+      "true_value": "-t",
+      "false_value": "",
+      "row": 32,
+      "col": 41,
+      "width": 19,
+      "height": 3,
+      "border": true,
+      "auto_size": true
+    },
+    {
+      "type": "Button",
+      "name": "ALERT",
+      "label": "ALERT",
+      "python": false,
+      "command": "./scripts/alert.sh \"$address_first_name\\n$address_last_name\\n$address_street\"",
+      "target": "_output",
+      "row": 15,
+      "col": 23,
+      "width": 20,
+      "height": 3
+    },
+    {
+      "type": "Checkbox",
+      "name": "r",
+      "label": "reversed",
+      "value": "-r",
+      "true_value": "-r",
+      "false_value": "",
+      "row": 35,
+      "col": 41,
+      "width": 15,
+      "height": 3,
+      "border": true,
+      "auto_size": true
+    },
+    {
       "type": "TextArea",
       "name": "_output",
       "value": "",
@@ -234,41 +200,6 @@
       "show_line_numbers": true
     },
     {
-      "type": "Button",
-      "name": "ALERT",
-      "label": "ALERT",
-      "python": false,
-      "command": "./scripts/alert.sh \"$address_first_name\\n$address_last_name\\n$address_street\"",
-      "target": "_output",
-      "row": 15,
-      "col": 23,
-      "width": 20,
-      "height": 3
-    },
-    {
-      "type": "Label",
-      "name": "_",
-      "label": "Selected:",
-      "row": 25,
-      "col": 84,
-      "width": 9,
-      "height": 1
-    },
-    {
-      "type": "Tree",
-      "name": "_tree",
-      "label": "Root",
-      "value": "",
-      "row": 1,
-      "col": 82,
-      "width": 50,
-      "height": 17,
-      "placeholder": "placeholder",
-      "backing_file": "",
-      "key": "name",
-      "target": "selected"
-    },
-    {
       "type": "Checkbox",
       "name": "a",
       "label": "all",
@@ -280,35 +211,120 @@
       "width": 10,
       "height": 3,
       "border": true,
-      "variable_width": false
+      "auto_size": true
     },
     {
-      "type": "Checkbox",
-      "name": "t",
-      "label": "time-ordered",
-      "value": "-t",
-      "true_value": "-t",
-      "false_value": "",
-      "row": 32,
-      "col": 41,
-      "width": 19,
-      "height": 3,
-      "border": true,
-      "variable_width": true
+      "type": "TextArea",
+      "name": "_a.jnk",
+      "value": "",
+      "row": 33,
+      "col": 81,
+      "width": 55,
+      "height": 17,
+      "placeholder": "placeholder",
+      "backing_file": "a.jnk",
+      "readonly": false,
+      "soft_wrap": false,
+      "language": "python",
+      "show_line_numbers": false
     },
     {
-      "type": "Checkbox",
-      "name": "r",
-      "label": "reversed",
-      "value": "-r",
-      "true_value": "-r",
-      "false_value": "",
-      "row": 35,
-      "col": 41,
-      "width": 15,
-      "height": 3,
-      "border": true,
-      "variable_width": true
+      "type": "Container",
+      "name": "address",
+      "label": "Address",
+      "row": 1,
+      "col": 13,
+      "width": 61,
+      "height": 13,
+      "children": [
+        {
+          "type": "Input",
+          "name": "first_name",
+          "value": "Greg",
+          "row": 0,
+          "col": 8,
+          "width": 49,
+          "height": 3,
+          "placeholder": "first name"
+        },
+        {
+          "type": "Input",
+          "name": "last_name",
+          "value": "Smith",
+          "row": 3,
+          "col": 8,
+          "width": 48,
+          "height": 3,
+          "placeholder": "last name"
+        },
+        {
+          "type": "Input",
+          "name": "street",
+          "value": "13620 Cradle Hill Road",
+          "row": 6,
+          "col": 8,
+          "width": 49,
+          "height": 3,
+          "placeholder": "address"
+        },
+        {
+          "type": "Label",
+          "name": "_label",
+          "label": "First:",
+          "row": 1,
+          "col": 2,
+          "width": 6,
+          "height": 1
+        },
+        {
+          "type": "RadioSet",
+          "name": "radioset",
+          "label": "RadioSet",
+          "value": "addddddd",
+          "values": "addddddd\nb\nc",
+          "row": 2,
+          "col": 24,
+          "width": 15,
+          "height": 5,
+          "target": "_output",
+          "auto_size": true
+        },
+        {
+          "type": "Label",
+          "name": "_label",
+          "label": "Street:",
+          "row": 7,
+          "col": 1,
+          "width": 7,
+          "height": 1
+        }
+      ]
+    },
+    {
+      "type": "Tree",
+      "name": "_tree",
+      "label": "Root",
+      "value": "",
+      "row": 0,
+      "col": 81,
+      "width": 50,
+      "height": 17,
+      "placeholder": "placeholder",
+      "backing_file": "",
+      "key": "name",
+      "target": "selected"
+    },
+    {
+      "type": "Button",
+      "name": "_",
+      "label": "DIALOG",
+      "python": false,
+      "command": "./scripts/dialog.sh \"$address_first_name\\n$address_last_name\\n$address_street\"",
+      "target": "_output",
+      "row": 15,
+      "col": 44,
+      "width": 21,
+      "height": 3
     }
   ]
 }

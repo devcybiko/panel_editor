@@ -1,5 +1,6 @@
 import json
 import sys
+import os
 from textual.app import App, ComposeResult
 from textual.containers import Container
 from textual.widget import Widget
@@ -46,6 +47,8 @@ class PanelEditor(LoggingWidget, MenuWidget, App):
         "css/draggable_tree.css",
         "css/panel_editor.css",
     ]
+    remove_queue = []
+
     def __init__(self, filename="a.json"):
         super().__init__()
         self.filename = filename
@@ -61,10 +64,15 @@ class PanelEditor(LoggingWidget, MenuWidget, App):
         self.app.panel = self
         self.app.panel.selected_widget = None
         self.action_load_panel()
-        self.set_interval(1.0, self.heartbeat)  # Calls heartbeat every 1 second
+        self.set_interval(0.25, self.heartbeat)  # Calls heartbeat every 0.5 seconds
 
-    def heartbeat(self) -> None:
+    async def heartbeat(self) -> None:
         # Update widgets here
+        for widget in self.remove_queue:
+            # GLS - NOTE: this solves a problem where removing a widget during drag-and-drop causes issues
+            # rather than removing widgets during event handlers we defer removal to here
+            widget.remove()
+        self.remove_queue = []
         for widget in self.container.children:
             widget.update()
 
@@ -151,6 +159,7 @@ class PanelEditor(LoggingWidget, MenuWidget, App):
             elif widget_data["type"] == "RadioSet":
                 props = RadioSetProperties(**widget_data)
                 widget = DraggableRadioSet(props)
+                container.mount(widget)
             elif widget_data["type"] == "TextArea":
                 props = TextAreaProperties(**widget_data)
                 widget = DraggableTextArea(props)
@@ -159,6 +168,9 @@ class PanelEditor(LoggingWidget, MenuWidget, App):
                 props = TreeProperties(**widget_data)
                 widget = DraggableTree(props)
                 container.mount(widget)
+            else:
+                self._warning(f"Unknown widget type: {widget_data['type']}")
+        container.refresh()
 
     def action_load_panel(self) -> None:
         with open(self.filename, "r") as f:
@@ -207,7 +219,10 @@ def parse_args():
     return parser.parse_args()
 
 def main():
-    import os
+    # from textual.widgets import TextArea
+    # from draggable_textarea import DraggableTextArea
+    # print(DraggableTextArea.COMPONENT_CLASSES)
+    # os._exit(0)
     args = parse_args()
     # If the file does not exist, create it with an empty dict
     if not os.path.exists(args.filename):
