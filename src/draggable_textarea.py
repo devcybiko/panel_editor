@@ -54,7 +54,9 @@ class DraggableTextArea(DraggableWidget, PropertiesWidget, FilebackedWidget, Tex
 
 
     def update(self, props=None):
+        # GLS - HACK - removing "language" support for now as it causes issues with TextArea base class
         self.props.language = None
+        props.language = None
         super().update(props)
         if self.text != self.props.value:
             self.text = self.props.value
