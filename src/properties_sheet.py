@@ -37,7 +37,8 @@ class PropertiesSheet(MenuWidget, ModalScreen):
                     language = "python"
                 else:
                     language = "bash"
-                input_widget = TextArea.code_editor(language=language, classes="property-textarea-command", id=f"{field.name}_input")
+                input_widget = TextArea.code_editor(classes="property-textarea-command", id=f"{field.name}_input")
+                # input_widget = TextArea.code_editor(language=language, classes="property-textarea-command", id=f"{field.name}_input")
                 input_widget.text = str(field_value)
             elif field.type == bool:
                 # For boolean fields, use a checkbox input
