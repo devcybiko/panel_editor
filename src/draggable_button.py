@@ -68,7 +68,10 @@ class DraggableButton(DraggableWidget, PropertiesWidget, Button):
     def _write_shell_script(self) -> None:
         with open('./tmp/a.sh', 'w') as f:
             for w in self.app.panel.get_all_widgets():
-                if w.props.name and hasattr(w.props, 'value') and w.props.name[0] != '_':
+                if not hasattr(w, 'props'):
+                    # it's not a draggable item
+                    continue
+                if hasattr(w, 'props') and w.props.name and hasattr(w.props, 'value') and w.props.name[0] != '_':
                     name = w.props.name
                     value = w.props.value
                     if w.parent != self.app.panel.container:
