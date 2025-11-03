@@ -57,7 +57,7 @@ class DraggableTextArea(DraggableWidget, PropertiesWidget, FilebackedWidget, Tex
         # GLS - HACK - removing "language" support for now as it causes issues with TextArea base class
         self.props.language = None
         if props is not None:
-            props.language = None
+            props["language"] = None
         super().update(props)
         if self.text != self.props.value:
             self.text = self.props.value
