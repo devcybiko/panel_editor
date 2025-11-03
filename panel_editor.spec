@@ -10,16 +10,17 @@ data_files = collect_data_files('src')
 # Entry point
 entry_script = 'src/panel_editor.py'
 
-# If you need to include additional files (CSS, assets, etc.), add them to datas
-# Example: datas = [('src/css/panel_editor.css', 'css')]
-datas = data_files
+import glob
+css_files = [(f, 'css') for f in glob.glob('src/css/*.css')]
+datas = data_files + css_files
 
 # Build the executable
 
+import os
 a = Analysis([
     entry_script
 ],
-    pathex=[],
+    pathex=[os.path.abspath('src')],
     binaries=[],
     datas=datas,
     hiddenimports=[],

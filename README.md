@@ -12,6 +12,10 @@ An application generator reminiscent of Visual Basic, but for Textual User Inter
 
 - `./run.sh`
 
+## Distribute as an executable
+
+- `pyinstaller panel_editor.spec`
+
 ## Keyboard Options
 
 - 'Ctrl-p' - the Textual "palette" is displayed

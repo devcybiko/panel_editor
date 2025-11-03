@@ -1,22 +1,4 @@
-from textual.app import App, ComposeResult
-from textual.widgets import Digits
-
-
-class DigitApp(App):
-    CSS = """
-    Screen {
-        align: center middle;
-    }
-    #pi {
-        border: double green;
-        width: auto;
-    }
-    """
-
-    def compose(self) -> ComposeResult:
-        yield Digits("3.141,592,653,5897", id="pi")
-
-
-if __name__ == "__main__":
-    app = DigitApp()
-    app.run()
+from tree_sitter_language_pack import get_language, get_parser
+language = get_language('python')
+parser = get_parser('python')
+print(f"Python language parser loaded: {language is not None}")

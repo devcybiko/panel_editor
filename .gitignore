@@ -4,3 +4,5 @@ __pycache__/
 *.jnk
 .DS_Store
 a.out
+dist/
+build/

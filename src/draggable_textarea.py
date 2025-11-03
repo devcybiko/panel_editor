@@ -19,7 +19,7 @@ class TextAreaProperties:
     backing_file: str = ""
     readonly: bool = False
     soft_wrap: bool = False
-    language: str = "python"
+    language: str = None
     show_line_numbers: bool = False
 
 class DraggableTextArea(DraggableWidget, PropertiesWidget, FilebackedWidget, TextArea):    
@@ -30,7 +30,7 @@ class DraggableTextArea(DraggableWidget, PropertiesWidget, FilebackedWidget, Tex
         PropertiesWidget.__init__(self, props)
         DraggableWidget.__init__(self)
         FilebackedWidget.__init__(self)
-        self.language = props.language
+        # self.language = props.language
         self.update()
     
     def on_text_area_changed(self, event: TextArea.Changed) -> None:
@@ -54,6 +54,7 @@ class DraggableTextArea(DraggableWidget, PropertiesWidget, FilebackedWidget, Tex
 
 
     def update(self, props=None):
+        self.props.language = None
         super().update(props)
         if self.text != self.props.value:
             self.text = self.props.value

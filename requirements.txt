@@ -5,3 +5,9 @@ pyperclip
 munch
 textual[syntax]
 json5
+pyinstaller
+# Needed for syntax highlighting and PyInstaller packaging
+tree-sitter-python
+tree-sitter-ruby
+tree-sitter-languages
+tree-sitter-language-pack
