@@ -15,7 +15,7 @@ class TextAreaProperties:
     col: int = 0
     width: int = 40
     height: int = 3
-    placeholder: str = "placeholder"
+    placeholder: str = None
     backing_file: str = ""
     readonly: bool = False
     soft_wrap: bool = False

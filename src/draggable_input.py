@@ -12,7 +12,7 @@ class InputProperties:
     col: int = 0
     width: int = 40
     height: int = 3
-    placeholder: str = "placeholder"
+    placeholder: str = None
 
 class DraggableInput(DraggableWidget, PropertiesWidget, Input):
     def __init__(self, props: InputProperties = None, *args, **kwargs):

@@ -64,18 +64,6 @@
       "placeholder": "placeholder"
     },
     {
-      "type": "DataTable",
-      "name": "_datatable",
-      "value": "",
-      "row": 38,
-      "col": 10,
-      "width": 68,
-      "height": 12,
-      "placeholder": "placeholder",
-      "backing_file": "",
-      "readonly": true
-    },
-    {
       "type": "Button",
       "name": "_",
       "label": "Sample Data",
@@ -185,21 +173,6 @@
       "auto_size": true
     },
     {
-      "type": "TextArea",
-      "name": "_output",
-      "value": "",
-      "row": 18,
-      "col": 11,
-      "width": 68,
-      "height": 14,
-      "placeholder": "placeholder",
-      "backing_file": "",
-      "readonly": false,
-      "soft_wrap": false,
-      "language": "python",
-      "show_line_numbers": true
-    },
-    {
       "type": "Checkbox",
       "name": "a",
       "label": "all",
@@ -225,7 +198,7 @@
       "backing_file": "a.jnk",
       "readonly": false,
       "soft_wrap": false,
-      "language": "python",
+      "language": null,
       "show_line_numbers": false
     },
     {
@@ -277,19 +250,6 @@
           "height": 1
         },
         {
-          "type": "RadioSet",
-          "name": "radioset",
-          "label": "RadioSet",
-          "value": "addddddd",
-          "values": "addddddd\nb\nc",
-          "row": 2,
-          "col": 24,
-          "width": 15,
-          "height": 5,
-          "target": "_output",
-          "auto_size": true
-        },
-        {
           "type": "Label",
           "name": "_label",
           "label": "Street:",
@@ -301,18 +261,87 @@
       ]
     },
     {
+      "type": "Label",
+      "name": "_label",
+      "label": "New Label",
+      "row": 0,
+      "col": 0,
+      "width": 9,
+      "height": 1
+    },
+    {
+      "type": "Input",
+      "name": "text_input",
+      "value": "",
+      "row": 20,
+      "col": 119,
+      "width": 40,
+      "height": 3,
+      "placeholder": ""
+    },
+    {
+      "type": "RadioSet",
+      "name": "radioset",
+      "label": "RadioSet",
+      "value": "b",
+      "values": "addddddd\nb\nc",
+      "row": 24,
+      "col": 143,
+      "width": 15,
+      "height": 5,
+      "target": "_output",
+      "auto_size": true
+    },
+    {
+      "type": "DirectoryTree",
+      "name": "DirUtil",
+      "value": "",
+      "row": 1,
+      "col": 137,
+      "width": 40,
+      "height": 20,
+      "path": "."
+    },
+    {
       "type": "Tree",
       "name": "_tree",
       "label": "Root",
       "value": "",
-      "row": 0,
-      "col": 81,
+      "row": 1,
+      "col": 80,
       "width": 50,
       "height": 17,
-      "placeholder": "placeholder",
+      "placeholder": "",
       "backing_file": "",
       "key": "name",
       "target": "selected"
+    },
+    {
+      "type": "TextArea",
+      "name": "_output",
+      "value": "",
+      "row": 18,
+      "col": 11,
+      "width": 68,
+      "height": 14,
+      "placeholder": "",
+      "backing_file": "",
+      "readonly": false,
+      "soft_wrap": false,
+      "language": null,
+      "show_line_numbers": true
+    },
+    {
+      "type": "DataTable",
+      "name": "_datatable",
+      "value": "",
+      "row": 38,
+      "col": 10,
+      "width": 68,
+      "height": 12,
+      "placeholder": "",
+      "backing_file": "",
+      "readonly": true
     },
     {
       "type": "Button",

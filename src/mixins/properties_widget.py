@@ -14,6 +14,7 @@ class PropertiesWidget:
     def __init__(self, props: dataclass, *args, **kwargs):
         self.props = props
         self.type = props.type
+        self.props_hash = None
 
     def _update_widget_member(self, property_name: str, property_value) -> None:
         if property_name in ("row", "col"):
@@ -36,6 +37,10 @@ class PropertiesWidget:
                 # Special handling for TextArea code editor properties
                 if self.language == self.props.language:
                     return
+            if property_name in ("placeholder"):
+                # Special handling for TextArea code editor properties
+                self.placeholder = self.props.placeholder or self.props.name
+                return
             if self.type == "Checkbox" and property_name == "value":
                 # Special handling for Checkbox value property
                 return
@@ -46,8 +51,12 @@ class PropertiesWidget:
     
     def update(self, props=None):
         from dataclasses import fields, is_dataclass
-        if not props:
+        if props is None:
             props = self.props
+        props_hash = hash(str(props))
+        if self.props_hash == props_hash:
+            return
+        self.props_hash = props_hash
         
         if hasattr(props, 'items'):
             # Dictionary-like object

@@ -1,0 +1,8 @@
+.draggable-directory-tree {
+    position: absolute;
+    background: $surface;
+    border: solid $primary;
+    padding: 0;
+    margin: 0;
+}
+

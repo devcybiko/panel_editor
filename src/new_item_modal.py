@@ -14,6 +14,7 @@ class NewItemModal(ModalScreen):
             OptionList(
                 Option("Button", id="button"),
                 Option("Data Table", id="datatable"),
+                Option("Directory Tree", id="directorytree"),
                 Option("Checkbox", id="checkbox"),
                 Option("Container", id="container"),
                 Option("Input", id="input"),

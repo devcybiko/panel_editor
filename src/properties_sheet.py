@@ -28,10 +28,10 @@ class PropertiesSheet(MenuWidget, ModalScreen):
             # Make "type" field read-only by using a disabled input
             if field.name.lower() in ["type"]:
                 input_widget = Input(disabled=True, classes="property-input readonly-field", id=f"{field.name}_input")
-                input_widget.value = str(field_value)
+                input_widget.value = str(field_value) if field_value is not None else ""
             elif field.type == text:
                 input_widget = TextArea(classes="property-textarea-command", id=f"{field.name}_input")
-                input_widget.text = str(field_value)
+                input_widget.text = str(field_value) if field_value is not None else ""
             elif field.type == code:
                 if hasattr(props, "python") and props.python:
                     language = "python"
@@ -39,13 +39,13 @@ class PropertiesSheet(MenuWidget, ModalScreen):
                     language = "bash"
                 input_widget = TextArea.code_editor(classes="property-textarea-command", id=f"{field.name}_input")
                 # input_widget = TextArea.code_editor(language=language, classes="property-textarea-command", id=f"{field.name}_input")
-                input_widget.text = str(field_value)
+                input_widget.text = str(field_value) if field_value is not None else ""
             elif field.type == bool:
                 # For boolean fields, use a checkbox input
                 input_widget = Checkbox(value=field_value, id=f"{field.name}_input")
             else:
                 input_widget = Input(id=f"{field.name}_input", classes="property-input")
-                input_widget.value = str(field_value)
+                input_widget.value = str(field_value) if field_value is not None else ""
             
             # Put label and input side by side in a horizontal container
             content_widgets.append(Horizontal(label, input_widget, classes="property-row"))

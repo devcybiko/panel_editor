@@ -21,7 +21,7 @@ class TreeProperties:
     col: int = 0
     width: int = 40
     height: int = 3
-    placeholder: str = "placeholder"
+    placeholder: str = None
     backing_file: str = ""
     key: str = ""
     target: str = ""

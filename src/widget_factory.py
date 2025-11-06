@@ -9,6 +9,7 @@ class WidgetFactory:
         from draggable_input import DraggableInput
         from draggable_label import DraggableLabel
         from draggable_textarea import DraggableTextArea
+        from draggable_directory_tree import DraggableDirectoryTree
         from draggable_datatable import DraggableDataTable
         from draggable_tree import DraggableTree
         from draggable_radioset import DraggableRadioSet
@@ -22,6 +23,8 @@ class WidgetFactory:
             return DraggableContainer(props)
         elif props.type == "DataTable":
             return DraggableDataTable(props)
+        elif props.type == "DirectoryTree":
+            return DraggableDirectoryTree(props)
         elif props.type == "Input":
             return DraggableInput(props)
         elif props.type == "Label":

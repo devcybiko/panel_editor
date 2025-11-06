@@ -14,6 +14,7 @@ from draggable_input import DraggableInput, InputProperties
 from draggable_checkbox import DraggableCheckbox, CheckboxProperties
 from new_item_modal import NewItemModal
 from draggable_datatable import DraggableDataTable, DataTableProperties
+from draggable_directory_tree import DraggableDirectoryTree, DirectoryTreeProperties
 from draggable_textarea import DraggableTextArea, TextAreaProperties
 from mixins.draggable_widget import DraggableWidget
 from draggable_label import DraggableLabel, LabelProperties
@@ -39,6 +40,7 @@ class PanelEditor(LoggingWidget, MenuWidget, App):
     CSS_PATH = [
         "css/draggable_button.css",
         "css/draggable_checkbox.css",
+        "css/draggable_directory_tree.css",
         "css/draggable_datatable.css",
         "css/draggable_input.css",
         "css/draggable_label.css",
@@ -86,6 +88,8 @@ class PanelEditor(LoggingWidget, MenuWidget, App):
                 new_widget = DraggableContainer()
             elif selection == "datatable":
                 new_widget = DraggableDataTable()
+            elif selection == "directorytree":
+                new_widget = DraggableDirectoryTree()
             elif selection == "label":
                 new_widget = DraggableLabel()
             elif selection == "input":
@@ -147,6 +151,10 @@ class PanelEditor(LoggingWidget, MenuWidget, App):
             elif widget_data["type"] == "DataTable":
                 props = DataTableProperties(**widget_data)
                 widget = DraggableDataTable(props)
+                container.mount(widget)
+            elif widget_data["type"] == "DirectoryTree":
+                props = DirectoryTreeProperties(**widget_data)
+                widget = DraggableDirectoryTree(props)
                 container.mount(widget)
             elif widget_data["type"] == "Input":
                 props = InputProperties(**widget_data)
@@ -219,10 +227,6 @@ def parse_args():
     return parser.parse_args()
 
 def main():
-    # from textual.widgets import TextArea
-    # from draggable_textarea import DraggableTextArea
-    # print(DraggableTextArea.COMPONENT_CLASSES)
-    # os._exit(0)
     args = parse_args()
     # If the file does not exist, create it with an empty dict
     if not os.path.exists(args.filename):
