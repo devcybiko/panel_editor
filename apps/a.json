@@ -15,7 +15,8 @@
       "col": 11,
       "width": 18,
       "height": 3,
-      "placeholder": "folder"
+      "placeholder": "folder",
+      "regex": ""
     },
     {
       "type": "Checkbox",
@@ -32,16 +33,6 @@
       "auto_size": true
     },
     {
-      "type": "Input",
-      "name": "pattern",
-      "value": "greg",
-      "row": 27,
-      "col": 93,
-      "width": 40,
-      "height": 3,
-      "placeholder": "placeholder"
-    },
-    {
       "type": "Button",
       "name": "_",
       "label": "find",
@@ -51,17 +42,8 @@
       "row": 27,
       "col": 81,
       "width": 12,
-      "height": 3
-    },
-    {
-      "type": "Input",
-      "name": "selected",
-      "value": "<empty>",
-      "row": 24,
-      "col": 94,
-      "width": 40,
       "height": 3,
-      "placeholder": "placeholder"
+      "form_validation": false
     },
     {
       "type": "Button",
@@ -73,7 +55,8 @@
       "row": 50,
       "col": 33,
       "width": 20,
-      "height": 3
+      "height": 3,
+      "form_validation": false
     },
     {
       "type": "Button",
@@ -85,7 +68,8 @@
       "row": 32,
       "col": 60,
       "width": 17,
-      "height": 3
+      "height": 3,
+      "form_validation": false
     },
     {
       "type": "Button",
@@ -97,7 +81,8 @@
       "row": 32,
       "col": 11,
       "width": 18,
-      "height": 3
+      "height": 3,
+      "form_validation": false
     },
     {
       "type": "Button",
@@ -109,7 +94,8 @@
       "row": 19,
       "col": 90,
       "width": 26,
-      "height": 3
+      "height": 3,
+      "form_validation": false
     },
     {
       "type": "Button",
@@ -121,7 +107,8 @@
       "row": 35,
       "col": 60,
       "width": 18,
-      "height": 3
+      "height": 3,
+      "form_validation": false
     },
     {
       "type": "Label",
@@ -145,18 +132,6 @@
       "height": 3,
       "border": true,
       "auto_size": true
-    },
-    {
-      "type": "Button",
-      "name": "ALERT",
-      "label": "ALERT",
-      "python": false,
-      "command": "./scripts/alert.sh \"$address_first_name\\n$address_last_name\\n$address_street\"",
-      "target": "_output",
-      "row": 15,
-      "col": 23,
-      "width": 20,
-      "height": 3
     },
     {
       "type": "Checkbox",
@@ -187,21 +162,6 @@
       "auto_size": true
     },
     {
-      "type": "TextArea",
-      "name": "_a.jnk",
-      "value": "",
-      "row": 33,
-      "col": 81,
-      "width": 55,
-      "height": 17,
-      "placeholder": "placeholder",
-      "backing_file": "a.jnk",
-      "readonly": false,
-      "soft_wrap": false,
-      "language": null,
-      "show_line_numbers": false
-    },
-    {
       "type": "Container",
       "name": "address",
       "label": "Address",
@@ -218,7 +178,8 @@
           "col": 8,
           "width": 49,
           "height": 3,
-          "placeholder": "first name"
+          "placeholder": "first name",
+          "regex": ""
         },
         {
           "type": "Input",
@@ -228,7 +189,8 @@
           "col": 8,
           "width": 48,
           "height": 3,
-          "placeholder": "last name"
+          "placeholder": "last name",
+          "regex": ""
         },
         {
           "type": "Input",
@@ -238,7 +200,8 @@
           "col": 8,
           "width": 49,
           "height": 3,
-          "placeholder": "address"
+          "placeholder": "address",
+          "regex": ""
         },
         {
           "type": "Label",
@@ -277,7 +240,8 @@
       "col": 119,
       "width": 40,
       "height": 3,
-      "placeholder": ""
+      "placeholder": "",
+      "regex": ""
     },
     {
       "type": "RadioSet",
@@ -291,16 +255,6 @@
       "height": 5,
       "target": "_output",
       "auto_size": true
-    },
-    {
-      "type": "DirectoryTree",
-      "name": "DirUtil",
-      "value": "",
-      "row": 1,
-      "col": 137,
-      "width": 40,
-      "height": 20,
-      "path": "."
     },
     {
       "type": "Tree",
@@ -317,21 +271,6 @@
       "target": "selected"
     },
     {
-      "type": "TextArea",
-      "name": "_output",
-      "value": "",
-      "row": 18,
-      "col": 11,
-      "width": 68,
-      "height": 14,
-      "placeholder": "",
-      "backing_file": "",
-      "readonly": false,
-      "soft_wrap": false,
-      "language": null,
-      "show_line_numbers": true
-    },
-    {
       "type": "DataTable",
       "name": "_datatable",
       "value": "",
@@ -345,6 +284,83 @@
     },
     {
       "type": "Button",
+      "name": "ALERT",
+      "label": "ALERT",
+      "python": false,
+      "command": "./scripts/alert.sh \"$address_first_name\\n$address_last_name\\n$address_street\"",
+      "target": "_output",
+      "row": 15,
+      "col": 23,
+      "width": 20,
+      "height": 3,
+      "form_validation": true
+    },
+    {
+      "type": "Input",
+      "name": "pattern",
+      "value": "999",
+      "row": 27,
+      "col": 93,
+      "width": 40,
+      "height": 3,
+      "placeholder": "placeholder",
+      "regex": "\\d+"
+    },
+    {
+      "type": "Input",
+      "name": "phone number",
+      "value": "804-986-2985",
+      "row": 24,
+      "col": 94,
+      "width": 40,
+      "height": 3,
+      "placeholder": "placeholder",
+      "regex": "\\d\\d\\d-\\d\\d\\d-\\d\\d\\d\\d"
+    },
+    {
+      "type": "TextArea",
+      "name": "_output",
+      "value": "",
+      "row": 18,
+      "col": 11,
+      "width": 68,
+      "height": 14,
+      "placeholder": "",
+      "backing_file": "",
+      "readonly": false,
+      "soft_wrap": false,
+      "language": null,
+      "show_line_numbers": true,
+      "regex": ""
+    },
+    {
+      "type": "TextArea",
+      "name": "_a.jnk",
+      "value": "",
+      "row": 33,
+      "col": 81,
+      "width": 89,
+      "height": 18,
+      "placeholder": "placeholder",
+      "backing_file": "a.jnk",
+      "readonly": false,
+      "soft_wrap": false,
+      "language": null,
+      "show_line_numbers": false,
+      "regex": ""
+    },
+    {
+      "type": "DirectoryTree",
+      "name": "DirUtil",
+      "value": "",
+      "row": 0,
+      "col": 136,
+      "width": 40,
+      "height": 20,
+      "path": "."
+    },
+    {
+      "type": "Button",
       "name": "_",
       "label": "DIALOG",
       "python": false,
@@ -353,7 +369,8 @@
       "row": 15,
       "col": 44,
       "width": 21,
-      "height": 3
+      "height": 3,
+      "form_validation": false
     }
   ]
 }

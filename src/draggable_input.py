@@ -13,6 +13,7 @@ class InputProperties:
     width: int = 40
     height: int = 3
     placeholder: str = None
+    regex: str = ""
 
 class DraggableInput(DraggableWidget, PropertiesWidget, Input):
     def __init__(self, props: InputProperties = None, *args, **kwargs):

@@ -20,6 +20,7 @@ class ButtonProperties:
     col: int = 0
     width: int = 20
     height: int = 3
+    form_validation: bool = False
 
 class DraggableButton(DraggableWidget, PropertiesWidget, Button):    
     def __init__(self, props: ButtonProperties = None, *args, **kwargs):
@@ -83,18 +84,23 @@ class DraggableButton(DraggableWidget, PropertiesWidget, Button):
         os.system(f"source ./tmp/a.sh 2>./tmp/a.err > ./tmp/a.out")
         with open('./tmp/a.out', 'r') as f:
             output = f.read()
-            widget = self.app.panel.find_widget(self.props.target)
-            if widget:
-                widget.props.value = output
-                widget.update()
-            else:
-                self.app.notify(f"Widget '{self.props.target}' not found", severity="error")
+            if self.props.target:
+                widget = self.app.panel.find_widget(self.props.target)
+                if widget:
+                    widget.props.value = output
+                    widget.update()
+                else:
+                    self.app.notify(f"Widget '{self.props.target}' not found", severity="error")
         with open('./tmp/a.err', 'r') as f:
             output = f.read().strip()
             if output:
                 self.app.notify(f"Command Error Output:\n{output}", severity="error")
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
+        if self.props.form_validation:
+            if not self.app.panel.validate_form():
+                self.app.notify("Form validation failed. Command not executed.", severity="warning")
+                return
         if self.props.command and not self.props.python:
             self.app.notify(f"Executing command: {self.props.command}", severity="information")
             self._write_shell_script()

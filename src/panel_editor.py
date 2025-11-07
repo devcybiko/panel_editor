@@ -1,4 +1,5 @@
 import json
+import re
 import sys
 import os
 from textual.app import App, ComposeResult
@@ -219,7 +220,19 @@ class PanelEditor(LoggingWidget, MenuWidget, App):
         if widget in self.container.children:
             self.container.remove(widget)
             self.container.mount(widget, before=self.container.children[0])
-
+    def validate_form(self) -> bool:
+        """Validate all widgets marked for form validation."""
+        valid = True
+        for widget in self.get_all_widgets():
+            if not hasattr(widget, "props"): continue
+            if not hasattr(widget.props, 'regex'): continue
+            if not hasattr(widget.props, "regex"): continue
+            pattern = widget.props.regex
+            value = getattr(widget.props, 'value', '')
+            if not re.match(pattern, value):
+                self.notify(f"Validation failed for '{widget.props.name}': Value '{value}' does not match pattern '{pattern}'", severity="error")
+                valid = False
+        return valid
 def parse_args():
     import argparse
     parser = argparse.ArgumentParser(description="Panel Editor")

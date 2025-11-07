@@ -21,6 +21,7 @@ class TextAreaProperties:
     soft_wrap: bool = False
     language: str = None
     show_line_numbers: bool = False
+    regex: str = ""
 
 class DraggableTextArea(DraggableWidget, PropertiesWidget, FilebackedWidget, TextArea):    
     def __init__(self, props: TextAreaProperties = None, *args, **kwargs):

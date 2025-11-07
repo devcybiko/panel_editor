@@ -49,6 +49,20 @@ class PropertiesWidget:
     
         return
     
+    def regex_validate(self) -> bool:
+        """Validate the widget's current value against its regex, if defined."""
+        import re
+        if hasattr(self.props, 'regex') and self.props.regex:
+            pattern = self.props.regex
+            value = getattr(self.props, 'value', '')
+            if not re.match(pattern, value):
+                self.add_class("error")
+                self.notify(f"Validating widget '{self.props.name}' with regex '{self.props.regex}'", severity="error")
+                return False
+            else:
+                self.remove_class("error")
+        return True
+    
     def update(self, props=None):
         from dataclasses import fields, is_dataclass
         if props is None:
@@ -78,6 +92,7 @@ class PropertiesWidget:
             
             # Apply changes using convention-based mapping
             self._update_widget_member(field_name, field_value)
+        self.regex_validate()
         self.refresh()
 
     def show_properties_sheet(self) -> None:

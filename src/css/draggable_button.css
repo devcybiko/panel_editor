@@ -12,3 +12,7 @@
     border: solid $accent;
 }
 
+.draggable-button.error {
+    background: red !important;
+}
+
