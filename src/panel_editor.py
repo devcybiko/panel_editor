@@ -24,13 +24,15 @@ from draggable_radioset import DraggableRadioSet, RadioSetProperties
 from mixins.logging_widget import LoggingWidget
 from mixins.menu_widget import MenuWidget
 
+from glslib import Application, GJSON
+
 ## GLS - HACK - monkey patch notify to add timeout default
 original_notify = Widget.notify
 def global_notify(self, message, timeout=5, **kwargs):
     return original_notify(self, message, timeout=timeout, **kwargs)
 Widget.notify = global_notify
 
-class PanelEditor(LoggingWidget, MenuWidget, App):    
+class PanelEditor(Application, LoggingWidget, MenuWidget, App):    
     BINDINGS = [
         ("ctrl+n", "show_new_item_modal", "New Item"),
         ("ctrl+s", "save_panel", "Save"),
@@ -52,9 +54,13 @@ class PanelEditor(LoggingWidget, MenuWidget, App):
     ]
     remove_queue = []
 
-    def __init__(self, filename="a.json"):
-        super().__init__()
-        self.filename = filename
+    def __init__(self):
+        super().__init__(description="Panel Editor")
+
+    def _arg_parse(self, parser):
+        super()._arg_parse(parser)
+        parser.add_argument("filename", nargs="?", default="./apps/a.json", help="Panel file to edit (default: a.json)")
+        return parser
 
     def compose(self) -> ComposeResult:
         yield Container(id="widget_container")
@@ -127,10 +133,10 @@ class PanelEditor(LoggingWidget, MenuWidget, App):
 
     def action_save_panel(self) -> None:
         widgets_data = self.container_to_dict(self.container)        
-        with open(self.filename, "w") as f:
+        with open(self.args.filename, "w") as f:
             json.dump(widgets_data, f, indent=2)
             f.flush()  # Ensure data is written to disk
-        self._info(f"File saved to {self.filename}")
+        self._info(f"File saved to {self.args.filename}")
 
     def load_widgets(self, widgets_data, container) -> None:
         for widget_data in widgets_data:
@@ -182,12 +188,12 @@ class PanelEditor(LoggingWidget, MenuWidget, App):
         container.refresh()
 
     def action_load_panel(self) -> None:
-        with open(self.filename, "r") as f:
+        with open(self.args.filename, "r") as f:
             panel_data = json.load(f)
         self.action_remove_all_widgets()
         widgets = panel_data.get("children", [])
         self.load_widgets(widgets, self.container)
-        self._info(f"Loaded {len(widgets)} widgets from {self.filename}")
+        self._info(f"Loaded {len(widgets)} widgets from {self.args.filename}")
 
     def get_all_widgets(self) -> list:
         all_widgets = []
@@ -233,20 +239,14 @@ class PanelEditor(LoggingWidget, MenuWidget, App):
                 self.notify(f"Validation failed for '{widget.props.name}': Value '{value}' does not match pattern '{pattern}'", severity="error")
                 valid = False
         return valid
-def parse_args():
-    import argparse
-    parser = argparse.ArgumentParser(description="Panel Editor")
-    parser.add_argument("filename", nargs="?", default="./apps/a.json", help="Panel file to edit (default: a.json)")
-    return parser.parse_args()
 
-def main():
-    args = parse_args()
-    # If the file does not exist, create it with an empty dict
-    if not os.path.exists(args.filename):
-        with open(args.filename, "w") as f:
-            json.dump({}, f)
-    app = PanelEditor(args.filename)
-    app.run()
+    def app_run(self):
+        # If the file does not exist, create it with an empty dict
+        if not os.path.exists(self.args.filename):
+            with open(self.args.filename, "w") as f:
+                json.dump({}, f)
+        self.run()
 
 if __name__ == "__main__":
-    main()
+    app = PanelEditor()
+    app.app_run()

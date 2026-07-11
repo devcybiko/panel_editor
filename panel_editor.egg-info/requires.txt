@@ -1,0 +1,15 @@
+textual>=0.1.0
+textual-dev>=1.0.0
+textual-web>=0.1.0
+pyperclip>=1.8.0
+munch>=2.5.0
+json5>=0.9.0
+pyinstaller>=6.0.0
+tree-sitter-python>=0.20.0
+tree-sitter-ruby>=0.20.0
+glslib @ git+https://github.com/devcybiko/glslib.git
+
+[dev]
+pytest>=7.0.0
+black>=22.0.0
+flake8>=4.0.0
